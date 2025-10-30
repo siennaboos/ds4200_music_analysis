@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duration vs Popularity</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          margin: 0;
+          background-color: #f5f5f5;
+          padding: 20px;
+      }
+      #upload-section {
+          background-color: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          margin-bottom: 20px;
+          text-align: center;
+      }
+      #file-input {
+          margin: 10px 0;
+      }
+      #chart {
+          background-color: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      .dot {
+          fill: pink;
+          stroke: white;
+          stroke-width: 0.25;
+          opacity: 0.5;
+      }
+      .trendline {
+          fill: none;
+          stroke: palevioletred;
+          stroke-width: 1;
+      }
+      .axis-label {
+          font-size: 12px;
+      }
+      .title {
+          font-size: 14px;
+          font-weight: bold;
+      }
+      .legend-text {
+          font-size: 11px;
+      }
+      .instructions {
+          color: #666;
+          font-size: 14px;
+      }
+  </style>
+</head>
+<body>
+<div id="upload-section">
+  <h3>Upload Spotify Dataset</h3>
+  <p class="instructions">Download the CSV from Kaggle and upload it here</p>
+  <input type="file" id="file-input" accept=".csv">
+</div>
+<div id="chart"></div>
+
+<script>
+  // Set up dimensions
+  const margin = {top: 40, right: 30, bottom: 50, left: 60};
+  const width = 700 - margin.left - margin.right;
+  const height = 500 - margin.top - margin.bottom;
+
+  // Create SVG
+  const svg = d3.select("#chart")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // File input handler
+  document.getElementById('file-input').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const csvData = e.target.result;
+        loadData(csvData);
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  function loadData(csvText) {
+    try {
+      // Clear any previous visualization
+      svg.selectAll("*").remove();
+
+      const data = d3.csvParse(csvText, d => ({
+        duration_ms: +d.duration_ms,
+        popularity: +d.popularity
+      })).filter(d => !isNaN(d.duration_ms) && !isNaN(d.popularity));
+
+      if (data.length === 0) {
+        throw new Error("No valid data found");
+      }
+
+      createVisualization(data);
+    } catch (error) {
+      console.error("Error loading data:", error);
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .text("Error: Make sure CSV has 'duration_ms' and 'popularity' columns");
+    }
+  }
+
+  function createVisualization(data) {
+    // Create scales
+    const xScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.duration_ms)])
+      .range([0, width]);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.popularity)])
+      .range([height, 0]);
+
+    // Add X axis
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(xScale));
+
+    // Add Y axis
+    svg.append("g")
+      .call(d3.axisLeft(yScale));
+
+    // Add X axis label
+    svg.append("text")
+      .attr("class", "axis-label")
+      .attr("x", width / 2)
+      .attr("y", height + 40)
+      .attr("text-anchor", "middle")
+      .text("Duration (minutes/seconds)");
+
+    // Add Y axis label
+    svg.append("text")
+      .attr("class", "axis-label")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -height / 2)
+      .attr("y", -45)
+      .attr("text-anchor", "middle")
+      .text("Popularity");
+
+    // Add title
+    svg.append("text")
+      .attr("class", "title")
+      .attr("x", width / 2)
+      .attr("y", -15)
+      .attr("text-anchor", "middle")
+      .text("Duration vs. Popularity of Songs on Spotify");
+
+    // Add scatter points
+    svg.selectAll(".dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("cx", d => xScale(d.duration_ms))
+      .attr("cy", d => yScale(d.popularity))
+      .attr("r", 3.5);
+
+    // Calculate linear regression
+    const xMean = d3.mean(data, d => d.duration_ms);
+    const yMean = d3.mean(data, d => d.popularity);
+
+    let numerator = 0;
+    let denominator = 0;
+
+    data.forEach(d => {
+      numerator += (d.duration_ms - xMean) * (d.popularity - yMean);
+      denominator += (d.duration_ms - xMean) ** 2;
+    });
+
+    const slope = numerator / denominator;
+    const intercept = yMean - slope * xMean;
+
+    // Create trendline data
+    const xMin = d3.min(data, d => d.duration_ms);
+    const xMax = d3.max(data, d => d.duration_ms);
+    const trendlineData = [
+      {x: xMin, y: slope * xMin + intercept},
+      {x: xMax, y: slope * xMax + intercept}
+    ];
+
+    // Add trendline
+    svg.append("path")
+      .datum(trendlineData)
+      .attr("class", "trendline")
+      .attr("d", d3.line()
+        .x(d => xScale(d.x))
+        .y(d => yScale(d.y))
+      );
+
+    // Add legend
+    const legend = svg.append("g")
+      .attr("transform", `translate(${width - 100}, 10)`);
+
+    // Song legend item
+    legend.append("circle")
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .attr("r", 3.5)
+      .attr("class", "dot");
+
+    legend.append("text")
+      .attr("x", 10)
+      .attr("y", 4)
+      .attr("class", "legend-text")
+      .text("Song");
+
+    // Trendline legend item
+    legend.append("line")
+      .attr("x1", -5)
+      .attr("x2", 5)
+      .attr("y1", 20)
+      .attr("y2", 20)
+      .attr("class", "trendline");
+
+    legend.append("text")
+      .attr("x", 10)
+      .attr("y", 24)
+      .attr("class", "legend-text")
+      .text("Trendline");
+  }
+</script>
+</body>
+</html>
