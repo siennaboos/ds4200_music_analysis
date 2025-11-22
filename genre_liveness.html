@@ -3,8 +3,41 @@
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
+<!-- Add this style in the <head> or <style> section -->
+<style>
+    #liveness-explanation {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 25px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 10px;
+        line-height: 1.8;
+        color: #2c3e50;
+        font-size: 1.05em;
+    }
+    
+    #liveness-explanation h3 {
+        margin-top: 0;
+        color: #34495e;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        text-align: left;
+    }
+    
+    #liveness-explanation p {
+        text-align: justify;
+        margin: 0;
+    }
+</style>
+
 <!-- Add this div where you want the chart to appear -->
 <div id="genre-liveness-chart"></div>
+
+<!-- Add this explanation section below the chart -->
+<div id="liveness-explanation">
+    <h3>Understanding the Liveness Metric</h3>
+    <p>Liveness in music refers to the perception of a real-time, human performance, which can be enhanced by audience presence, a sense of spontaneity, and acoustic qualities like reverberation. It is also a critical concept in distinguishing between a live performance and a recorded one, often carrying connotations of authenticity versus the artifice of recording. In this visualization, we measured the average liveness of all the tracks in each genre and compared them. Brazilian music by far had the most liveness relative to the other genres, with Latin & Caribbean and Specialty & Novelty following. Country & Folk Americana had the lowest measure of liveness. This could be a reflection of Brazilian culture having values of authenticity and interpersonal connection. In the mental health context of our research, listening to music with high liveness could help one’s mental state. We hypothesize that it could reduce feelings of loneliness by adding an element of human connection that can be felt through the music. Future study can test for an association. </p>
+</div>
 
 <!-- Add this script at the bottom of your page or in a <script> tag -->
 <script type="text/javascript">
