@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Psychology of Playlists</title>
+    <link href="style.css" rel="stylesheet" />
+    
+    <!-- Vega/Vega-Lite for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    
+    <style>
+        #liveness-explanation {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px 30px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #4a90e2;
+            line-height: 1.7;
+            color: #333;
+            font-size: 1em;
+        }
+        
+        #liveness-explanation h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        #liveness-explanation p {
+            text-align: left;
+            margin: 0;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .image, .text {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>The Psychology of Playlists: Spotify Insights into Mental Health and Athletic Edge</h1>
+
+    <h3>Overall Introduction</h3>
+
+    <p>Our project looks at how music—especially the playlists people create and 
+       listen to on Spotify—connects to both mental health and athletic performance. 
+       This topic matters because music is something people turn to every day to manage their emotions, 
+       stay motivated, or get into a certain mindset for exercise. With Spotify 
+       providing such rich musical and behavioral data, we can move beyond intuition and actually 
+       analyze how features like valence, energy, tempo, danceability, and speechiness
+       might influence mood or support physical performance. Understanding these relationships 
+       helps show how music functions not just as background noise, but as a practical, 
+       personalized tool for emotional regulation and athletic edge.
+    </p>
+
+    <p>To investigate this, we're using the Spotify Tracks Dataset from Kaggle, which includes 
+       over half a million songs and a wide range of audio features. Our tasks involve 
+       conducting exploratory analyses on different musical attributes, identifying patterns 
+       that relate to psychological states or athletic contexts, and creating a series of 
+       visualizations to show these connections clearly. Each team member focuses on a different 
+       set of feature relationships, and together we aim to build a data-driven picture of 
+       how music can shape both mental well-being and physical performance.</p>
+
+    <h3>Introduction to the Data</h3>
+
+    <p>Our analysis makes use of the Spotify Tracks Dataset, which contains audio features 
+       and metadata for over 500,000 tracks across 125 different genres. The dataset includes 
+       the following key features relevant to our analysis:</p>  
+
+    <div class="center">
+        <table class="tg">
+            <thead>
+              <tr>
+                <th class="tg-0lax">Variable Name</th>
+                <th class="tg-0lax">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tg-0lax">track_name</td>
+                <td class="tg-0lax">Name of the track</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">artists</td>
+                <td class="tg-0lax">Artist(s) who performed the track</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">track_genre</td>
+                <td class="tg-0lax">Genre classification of the track</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">valence</td>
+                <td class="tg-0lax">Musical positiveness (0.0 to 1.0)</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">energy</td>
+                <td class="tg-0lax">Intensity and activity measure (0.0 to 1.0)</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">danceability</td>
+                <td class="tg-0lax">How suitable a track is for dancing (0.0 to 1.0)</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">liveness</td>
+                <td class="tg-0lax">Presence of audience in the recording (0.0 to 1.0)</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">tempo</td>
+                <td class="tg-0lax">Beats per minute (BPM)</td>
+              </tr>
+              <tr>
+                <td class="tg-0lax">speechiness</td>
+                <td class="tg-0lax">Presence of spoken words (0.0 to 1.0)</td>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Liveness Across Genre Categories</h3>
+
+    <p>One of the key features we examined is "liveness," which measures the presence of 
+       an audience in the recording. This feature is particularly interesting because it 
+       can indicate the authenticity and human connection present in music, which may have 
+       important implications for mental health and emotional well-being.</p>
+
+    <!-- Liveness visualization chart -->
+    <div id="genre-liveness-chart"></div>
+
+    <!-- Explanation section -->
+    <div id="liveness-explanation">
+        <h3>Interpretation</h3>
+        <p>Liveness in music refers to the perception of a real-time, human performance, which can be enhanced by audience presence, a sense of spontaneity, and acoustic qualities like reverberation. It is also a critical concept in distinguishing between a live performance and a recorded one, often carrying connotations of authenticity versus the artifice of recording. In this visualization, we measured the average liveness of all the tracks in each genre and compared them. Brazilian music by far had the most liveness relative to the other genres, with Latin & Caribbean and Specialty & Novelty following. Country & Folk Americana had the lowest measure of liveness. This could be a reflection of Brazilian culture having values of authenticity and interpersonal connection. In the mental health context of our research, listening to music with high liveness could help one's mental state. We hypothesize that it could reduce feelings of loneliness by adding an element of human connection that can be felt through the music. Future study can test for an association.</p>
+    </div>
+
+    <h3>Additional Analyses</h3>
+
+    <p>Beyond liveness, our team is exploring various other musical features and their 
+       relationships to mental health and athletic performance. These include examining 
+       how valence (musical positiveness) correlates with mood regulation, how energy 
+       and tempo relate to workout intensity preferences, and how danceability might 
+       influence motivation and engagement during physical activity.</p>
+
+    <h3>Summary and Future Directions</h3>
+
+    <p>In this analysis, we explored how the liveness feature varies across different 
+       music genres and discussed its potential implications for mental health and 
+       emotional well-being. Our findings suggest that genres with higher liveness 
+       scores may offer unique psychological benefits through their sense of human 
+       connection and authenticity.</p>
+
+    <p>Future work will involve deeper statistical analyses to test our hypotheses 
+       about the relationship between musical features and psychological outcomes, 
+       as well as controlled studies to determine causality. We also plan to explore 
+       how combinations of multiple musical features might work together to influence 
+       mood and performance.</p>
+
+    <p>If you are interested in the project and want to share more opinions or 
+       resources about the project, please contact the research team.</p>
+
+    <!-- Liveness visualization script -->
+    <script type="text/javascript">
+        const chartData = [
+            {"genre_category":"Brazilian","liveness":0.40684415},
+            {"genre_category":"Latin & Caribbean","liveness":0.2574202909},
+            {"genre_category":"Specialty & Novelty","liveness":0.2545072375},
+            {"genre_category":"Metal","liveness":0.2417994667},
+            {"genre_category":"World & Traditional","liveness":0.2354663},
+            {"genre_category":"Jazz & Blues","liveness":0.2201746},
+            {"genre_category":"Mood & Ambient","liveness":0.21204415},
+            {"genre_category":"Rock & Alternative","liveness":0.2115458647},
+            {"genre_category":"Hip-Hop & Urban","liveness":0.1995304667},
+            {"genre_category":"Pop","liveness":0.1949526375},
+            {"genre_category":"Electronic & Dance","liveness":0.1905845029},
+            {"genre_category":"Asian Pop & Regional","liveness":0.1898864222},
+            {"genre_category":"European & Regional","liveness":0.1847264667},
+            {"genre_category":"Classical & Sophisticated","liveness":0.18300595},
+            {"genre_category":"Country & Folk Americana","liveness":0.1750093286}
+        ];
+
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "data": {"values": chartData},
+            "width": 800,
+            "height": 500,
+            "title": "Average Liveness by Genre Category (Click to Highlight)",
+            "params": [{
+                "name": "select",
+                "select": {"type": "point", "fields": ["genre_category"]}
+            }],
+            "mark": {"type": "bar"},
+            "encoding": {
+                "x": {
+                    "field": "liveness",
+                    "type": "quantitative",
+                    "title": "Average Liveness Score",
+                    "scale": {"domain": [0, 0.45]}
+                },
+                "y": {
+                    "field": "genre_category",
+                    "type": "nominal",
+                    "title": "Genre Category",
+                    "sort": "-x"
+                },
+                "color": {
+                    "condition": {
+                        "param": "select",
+                        "field": "liveness",
+                        "type": "quantitative",
+                        "scale": {"scheme": "viridis"},
+                        "legend": {"title": "Liveness"}
+                    },
+                    "value": "lightgray"
+                },
+                "opacity": {
+                    "condition": {"param": "select", "value": 1},
+                    "value": 0.3
+                },
+                "tooltip": [
+                    {"field": "genre_category", "type": "nominal", "title": "Genre Category"},
+                    {"field": "liveness", "type": "quantitative", "title": "Average Liveness", "format": ".4f"}
+                ]
+            }
+        };
+
+        vegaEmbed('#genre-liveness-chart', spec, {
+            actions: {
+                export: true,
+                source: false,
+                compiled: false,
+                editor: false
+            }
+        });
+    </script>
+
+</body>
+</html>
