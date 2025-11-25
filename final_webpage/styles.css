@@ -1,0 +1,87 @@
+body {
+  font-family: Georgia, serif;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #222;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin: 50px 0 15px 0;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+.controls, #controls, #controls2 {
+  margin: 20px 0;
+}
+
+select {
+  padding: 5px 10px;
+  font-size: 15px;
+}
+
+label {
+  margin-right: 10px;
+}
+
+.viz-container {
+  margin: 30px 0;
+}
+
+iframe {
+  width: 100%;
+  border: none;
+  height: 1400px;
+  overflow: hidden;
+}
+
+.grid line {
+  stroke: #ddd;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.bar {
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.legend-box {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 3px;
+  pointer-events: none;
+  opacity: 0;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+  z-index: 1000;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 60px 0;
+}
