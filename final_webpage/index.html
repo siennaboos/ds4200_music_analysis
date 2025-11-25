@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Genre Analysis</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #222;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      margin: 50px 0 15px 0;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    .controls, #controls, #controls2 {
+      margin: 20px 0;
+    }
+
+    select {
+      padding: 5px 10px;
+      font-size: 15px;
+    }
+
+    label {
+      margin-right: 10px;
+    }
+
+    .viz-container {
+      margin: 30px 0;
+    }
+
+    .grid line {
+      stroke: #ddd;
+    }
+
+    .grid path {
+      stroke-width: 0;
+    }
+
+    .bar {
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .legend-box {
+      background: white;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 3px;
+      pointer-events: none;
+      opacity: 0;
+      font-size: 13px;
+      font-family: Arial, sans-serif;
+      z-index: 1000;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 60px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Music Genre Analysis</h1>
+  <p>Exploring patterns in Spotify track data across different genres.</p>
+
+  <hr>
+
+  <h2>Popularity by Genre</h2>
+  <p>Average popularity scores across genre categories. Click bars to highlight.</p>
+  <div class="viz-container">
+    <div id="popularity-chart"></div>
+  </div>
+
+  <hr>
+
+  <h2>Liveness by Genre</h2>
+  <p>Shows how likely tracks were recorded with a live audience. Click to highlight.</p>
+  <div class="viz-container">
+    <div id="liveness-chart"></div>
+  </div>
+
+  <hr>
+
+  <h2>Energy vs Valence</h2>
+  <p>Relationship between energy and positivity. Bubble size represents acousticness, colors show explicit content.</p>
+  <div id="controls">
+    <label for="genreSelect">Genre:</label>
+    <select id="genreSelect"></select>
+  </div>
+  <div class="viz-container">
+    <div id="chart"></div>
+  </div>
+
+  <hr>
+
+  <h2>Duration vs Popularity</h2>
+  <p>How track length relates to popularity, with regression line.</p>
+  <div id="controls2">
+    <label for="genreSelect2">Genre:</label>
+    <select id="genreSelect2"></select>
+  </div>
+  <div class="viz-container">
+    <div id="chart2"></div>
+  </div>
+
+  <script>
+    const genre_dict = {
+      'Rock & Alternative': [
+        'alt-rock', 'alternative', 'grunge', 'hard-rock', 'indie',
+        'psych-rock', 'punk-rock', 'punk', 'rock', 'rock-n-roll',
+        'guitar', 'goth', 'emo', 'garage', 'industrial', 'grindcore',
+        'hardcore'
+      ],
+      'Metal': [
+        'black-metal', 'death-metal', 'heavy-metal', 'metal',
+        'metalcore', 'power-pop'
+      ],
+      'Electronic & Dance': [
+        'breakbeat', 'chicago-house', 'club', 'dance', 'deep-house',
+        'detroit-techno', 'disco', 'drum-and-bass', 'dubstep', 'edm',
+        'electro', 'electronic', 'hardstyle', 'house', 'idm',
+        'minimal-techno', 'progressive-house', 'techno', 'trance',
+        'synth-pop', 'groove'
+      ],
+      'Hip-Hop & Urban': [
+        'hip-hop', 'r-n-b', 'soul', 'funk', 'dub', 'trip-hop'
+      ],
+      'Pop': [
+        'pop', 'indie-pop', 'pop-film', 'party'
+      ],
+      'Country & Folk Americana': [
+        'country', 'folk', 'bluegrass', 'honky-tonk',
+        'singer-songwriter', 'songwriter', 'acoustic'
+      ],
+      'Jazz & Blues': [
+        'jazz', 'blues', 'gospel'
+      ],
+      'Latin & Caribbean': [
+        'latin', 'latino', 'reggae', 'reggaeton', 'dancehall',
+        'salsa', 'samba', 'tango', 'brazil', 'forro', 'pagode'
+      ],
+      'Brazilian': [
+        'mpb', 'sertanejo'
+      ],
+      'Asian Pop & Regional': [
+        'j-pop', 'j-rock', 'j-dance', 'j-idol', 'k-pop',
+        'cantopop', 'mandopop', 'indian', 'malay'
+      ],
+      'European & Regional': [
+        'french', 'german', 'british', 'swedish', 'turkish',
+        'iranian', 'spanish'
+      ],
+      'Classical & Sophisticated': [
+        'classical', 'opera', 'new-age', 'piano'
+      ],
+      'Mood & Ambient': [
+        'ambient', 'chill', 'happy', 'sad', 'sleep', 'study'
+      ],
+      'World & Traditional': [
+        'world-music', 'afrobeat', 'ska'
+      ],
+      'Specialty & Novelty': [
+        'anime', 'children', 'kids', 'comedy', 'disney',
+        'show-tunes', 'romance', 'rockabilly'
+      ]
+    };
+
+    const genreToCategory = {};
+    for (const [category, genres] of Object.entries(genre_dict)) {
+      genres.forEach(genre => {
+        genreToCategory[genre] = category;
+      });
+    }
+
+    let allData;
+
+    d3.csv('dataset.csv').then(function(data) {
+      allData = data;
+      allData.forEach(function(d) {
+        d.energy = +d.energy;
+        d.valence = +d.valence;
+        d.acousticness = +d.acousticness;
+        d.explicit = (d.explicit === 'True' || d.explicit === 'true' || d.explicit === true);
+        d.duration = (+d.duration_ms / 1000) / 60;
+        d.popularity = +d.popularity;
+        d.liveness = +d.liveness;
+      });
+
+      createPopularityChart(data);
+      createLivenessChart(data);
+      createEnergyValenceChart(data);
+      createDurationChart(data);
+    }).catch(function(error) {
+      console.error('Error loading the CSV file:', error);
+    });
+
+    function createPopularityChart(data) {
+      const categoryPopularity = {};
+      const categoryCounts = {};
+
+      data.forEach(d => {
+        const genre = d.track_genre;
+        const popularity = +d.popularity;
+        
+        if (!genre || isNaN(popularity)) return;
+        
+        const category = genreToCategory[genre];
+        if (!category) return;
+
+        if (!categoryPopularity[category]) {
+          categoryPopularity[category] = 0;
+          categoryCounts[category] = 0;
+        }
+        
+        categoryPopularity[category] += popularity;
+        categoryCounts[category] += 1;
+      });
+
+      const popularityData = [];
+      for (const [category, total] of Object.entries(categoryPopularity)) {
+        popularityData.push({
+          genre_category: category,
+          popularity: total / categoryCounts[category]
+        });
+      }
+
+      popularityData.sort((a, b) => b.popularity - a.popularity);
+
+      const margin = {top: 60, right: 120, bottom: 60, left: 220};
+      const width = 900 - margin.left - margin.right;
+      const height = 600 - margin.top - margin.bottom;
+
+      const svg = d3.select("#popularity-chart")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip");
+
+      const x = d3.scaleLinear()
+        .domain([0, d3.max(popularityData, d => d.popularity) * 1.1])
+        .range([0, width]);
+
+      const y = d3.scaleBand()
+        .domain(popularityData.map(d => d.genre_category))
+        .range([0, height])
+        .padding(0.2);
+
+      const colorScale = d3.scaleSequential()
+        .domain([0, d3.max(popularityData, d => d.popularity)])
+        .interpolator(d3.interpolateViridis);
+
+      svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("font-size", "12px");
+
+      svg.append("g")
+        .call(d3.axisLeft(y))
+        .selectAll("text")
+        .style("font-size", "12px");
+
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 45)
+        .style("text-anchor", "middle")
+        .style("font-size", "14px")
+        .text("Average Popularity Score");
+
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -180)
+        .style("text-anchor", "middle")
+        .style("font-size", "14px")
+        .text("Genre Category");
+
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", -30)
+        .style("text-anchor", "middle")
+        .style("font-size", "18px")
+        .text("Average Popularity by Genre Category");
+
+      let selectedBar = null;
+
+      const bars = svg.selectAll(".bar")
+        .data(popularityData)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("y", d => y(d.genre_category))
+        .attr("width", d => x(d.popularity))
+        .attr("height", y.bandwidth())
+        .attr("fill", d => colorScale(d.popularity))
+        .attr("opacity", 1)
+        .on("mouseover", function(event, d) {
+          if (!selectedBar || selectedBar === this) {
+            d3.select(this).attr("opacity", 0.8);
+          }
+          tooltip
+            .style("opacity", 1)
+            .html(`<strong>${d.genre_category}</strong><br/>Popularity: ${d.popularity.toFixed(2)}`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(event, d) {
+          if (!selectedBar) {
+            d3.select(this).attr("opacity", 1);
+          } else if (selectedBar === this) {
+            d3.select(this).attr("opacity", 1);
+          } else {
+            d3.select(this).attr("opacity", 0.3);
+          }
+          tooltip.style("opacity", 0);
+        })
+        .on("click", function(event, d) {
+          if (selectedBar === this) {
+            selectedBar = null;
+            bars.attr("opacity", 1);
+          } else {
+            selectedBar = this;
+            bars.attr("opacity", 0.3);
+            d3.select(this).attr("opacity", 1);
+          }
+        });
+
+      svg.selectAll(".label")
+        .data(popularityData)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("x", d => x(d.popularity) + 5)
+        .attr("y", d => y(d.genre_category) + y.bandwidth() / 2)
+        .attr("dy", "0.35em")
+        .style("font-size", "11px")
+        .style("fill", "#333")
+        .text(d => d.popularity.toFixed(1));
+
+      const legendWidth = 20;
+      const legendHeight = 200;
+      
+      const legendScale = d3.scaleLinear()
+        .domain([0, d3.max(popularityData, d => d.popularity)])
+        .range([legendHeight, 0]);
+
+      const legendAxis = d3.axisRight(legendScale)
+        .ticks(5)
+        .tickFormat(d => d.toFixed(0));
+
+      const legend = svg.append("g")
+        .attr("transform", `translate(${width + 20}, ${(height - legendHeight) / 2})`);
+
+      const defs = svg.append("defs");
+      const gradient = defs.append("linearGradient")
+        .attr("id", "legend-gradient")
+        .attr("x1", "0%")
+        .attr("y1", "100%")
+        .attr("x2", "0%")
+        .attr("y2", "0%");
+
+      gradient.selectAll("stop")
+        .data(d3.range(0, 1.1, 0.1))
+        .enter()
+        .append("stop")
+        .attr("offset", d => (d * 100) + "%")
+        .attr("stop-color", d => colorScale(d * d3.max(popularityData, datum => datum.popularity)));
+
+      legend.append("rect")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#legend-gradient)");
+
+      legend.append("g")
+        .attr("transform", `translate(${legendWidth}, 0)`)
+        .call(legendAxis);
+
+      legend.append("text")
+        .attr("transform", `translate(${legendWidth / 2}, ${-10})`)
+        .style("text-anchor", "middle")
+        .style("font-size", "12px")
+        .text("Popularity");
+    }
+
+    function createLivenessChart(data) {
+      const categoryData = {};
+      const categoryCounts = {};
+
+      data.forEach(d => {
+        const genre = d.track_genre;
+        const liveness = d.liveness;
+
+        if (!genre || isNaN(liveness)) return;
+
+        const category = genreToCategory[genre];
+        if (!category) return;
+
+        if (!categoryData[category]) {
+          categoryData[category] = 0;
+          categoryCounts[category] = 0;
+        }
+
+        categoryData[category] += liveness;
+        categoryCounts[category] += 1;
+      });
+
+      const livenessData = [];
+      for (const [category, total] of Object.entries(categoryData)) {
+        livenessData.push({
+          genre_category: category,
+          liveness: total / categoryCounts[category]
+        });
+      }
+
+      livenessData.sort((a, b) => b.liveness - a.liveness);
+
+      const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "data": {"values": livenessData},
+        "width": 800,
+        "height": 500,
+        "title": "Average Liveness by Genre Category",
+        "mark": "bar",
+        "encoding": {
+          "x": {
+            "field": "liveness",
+            "type": "quantitative",
+            "title": "Average Liveness Score",
+            "scale": {"domain": [0, 0.45]}
+          },
+          "y": {
+            "field": "genre_category",
+            "type": "nominal",
+            "title": "Genre Category",
+            "sort": "-x"
+          },
+          "color": {
+            "condition": {
+              "param": "select",
+              "field": "liveness",
+              "type": "quantitative",
+              "scale": {"scheme": "viridis"},
+              "legend": {"title": "Liveness"}
+            },
+            "value": "lightgray"
+          },
+          "opacity": {
+            "condition": {"param": "select", "value": 1},
+            "value": 0.3
+          },
+          "tooltip": [
+            {"field": "genre_category", "type": "nominal", "title": "Genre Category"},
+            {"field": "liveness", "type": "quantitative", "title": "Average Liveness", "format": ".4f"}
+          ]
+        },
+        "params": [{
+          "name": "select",
+          "select": {"type": "point", "fields": ["genre_category"]}
+        }]
+      };
+
+      vegaEmbed('#liveness-chart', spec);
+    }
+
+    function createEnergyValenceChart(data) {
+      const select = document.getElementById('genreSelect');
+
+      Object.keys(genre_dict).forEach(genre => {
+        const option = document.createElement('option');
+        option.value = genre;
+        option.textContent = genre;
+        select.appendChild(option);
+      });
+
+      select.value = 'Hip-Hop & Urban';
+
+      updateChart('Hip-Hop & Urban');
+
+      select.addEventListener('change', function() {
+        updateChart(this.value);
+      });
+
+      function updateChart(selectedGenre) {
+        d3.select('#chart').selectAll('*').remove();
+
+        const genreList = genre_dict[selectedGenre];
+        const filteredData = allData.filter(d => genreList.includes(d.track_genre));
+
+        if (filteredData.length === 0) {
+          d3.select('#chart').append('p')
+            .text('No data available for this genre category');
+          return;
+        }
+
+        const cleanData = filteredData.filter(d => !d.explicit);
+        const explicitData = filteredData.filter(d => d.explicit);
+
+        const width = 900;
+        const height = 600;
+        const margin = { top: 60, bottom: 60, left: 60, right: 60 };
+
+        const svg = d3.select('#chart')
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height);
+
+        const xScale = d3.scaleLinear()
+          .domain([0, 1])
+          .range([margin.left, width - margin.right]);
+
+        const yScale = d3.scaleLinear()
+          .domain([0, 1])
+          .range([height - margin.bottom, margin.top]);
+
+        svg.append('g')
+          .attr('class', 'grid')
+          .attr('transform', `translate(0, ${height - margin.bottom})`)
+          .call(d3.axisBottom(xScale)
+            .tickSize(-height + margin.top + margin.bottom)
+            .tickFormat(''));
+
+        svg.append('g')
+          .attr('class', 'grid')
+          .attr('transform', `translate(${margin.left}, 0)`)
+          .call(d3.axisLeft(yScale)
+            .tickSize(-width + margin.left + margin.right)
+            .tickFormat(''));
+
+        svg.append('g')
+          .call(d3.axisBottom(xScale))
+          .attr('transform', `translate(0, ${height - margin.bottom})`);
+
+        svg.append('g')
+          .call(d3.axisLeft(yScale))
+          .attr('transform', `translate(${margin.left}, 0)`);
+
+        svg.append('text')
+          .attr('x', width / 2)
+          .attr('y', height - 15)
+          .text('Energy')
+          .style('text-anchor', 'middle')
+          .style('font-size', '14px');
+
+        svg.append('text')
+          .attr('x', 0 - height / 2)
+          .attr('y', 15)
+          .text('Valence')
+          .style('text-anchor', 'middle')
+          .attr('transform', 'rotate(-90)')
+          .style('font-size', '14px');
+
+        svg.append('text')
+          .attr('x', width / 2)
+          .attr('y', 30)
+          .text(`Energy vs Valence: ${selectedGenre}`)
+          .style('text-anchor', 'middle')
+          .style('font-size', '16px');
+
+        svg.append('g')
+          .selectAll("circle")
+          .data(cleanData)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.energy))
+          .attr("cy", d => yScale(d.valence))
+          .attr("r", d => 3 + (d.acousticness * 8))
+          .style("fill", "navy")
+          .style("opacity", 0.6)
+          .style("stroke", "white")
+          .style("stroke-width", 0.5);
+
+        svg.append('g')
+          .selectAll("circle")
+          .data(explicitData)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.energy))
+          .attr("cy", d => yScale(d.valence))
+          .attr("r", d => 3 + (d.acousticness * 8))
+          .style("fill", "purple")
+          .style("opacity", 0.6)
+          .style("stroke", "white")
+          .style("stroke-width", 0.5);
+
+        const explicitLegend = svg.append('g')
+          .attr('transform', `translate(${margin.left + 10}, ${margin.top + 10})`);
+
+        explicitLegend.append('rect')
+          .attr('class', 'legend-box')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', 140)
+          .attr('height', 70)
+          .attr('fill', 'white')
+          .attr('stroke', '#ccc')
+          .attr('rx', 4);
+
+        explicitLegend.append('text')
+          .attr('x', 10)
+          .attr('y', 20)
+          .text('Explicitness')
+          .style('font-weight', 'bold')
+          .style('font-size', '12px');
+
+        explicitLegend.append('circle')
+          .attr('cx', 20)
+          .attr('cy', 38)
+          .attr('r', 6)
+          .style('fill', 'navy')
+          .style('opacity', 0.6)
+          .style('stroke', 'white');
+
+        explicitLegend.append('text')
+          .attr('x', 32)
+          .attr('y', 42)
+          .text('Non-Explicit')
+          .style('font-size', '11px');
+
+        explicitLegend.append('circle')
+          .attr('cx', 20)
+          .attr('cy', 58)
+          .attr('r', 6)
+          .style('fill', 'purple')
+          .style('opacity', 0.6)
+          .style('stroke', 'white');
+
+        explicitLegend.append('text')
+          .attr('x', 32)
+          .attr('y', 62)
+          .text('Explicit')
+          .style('font-size', '11px');
+
+        const acousticLegend = svg.append('g')
+          .attr('transform', `translate(${width - margin.right - 150}, ${margin.top + 10})`);
+
+        acousticLegend.append('rect')
+          .attr('class', 'legend-box')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', 140)
+          .attr('height', 110)
+          .attr('fill', 'white')
+          .attr('stroke', '#ccc')
+          .attr('rx', 4);
+
+        acousticLegend.append('text')
+          .attr('x', 10)
+          .attr('y', 20)
+          .text('Acousticness')
+          .style('font-weight', 'bold')
+          .style('font-size', '12px');
+
+        const acousticSizes = [
+          { value: 0.1, label: 'Low (0.1)' },
+          { value: 0.3, label: 'Medium (0.3)' },
+          { value: 0.5, label: 'High (0.5)' }
+        ];
+
+        acousticSizes.forEach((item, i) => {
+          const yPos = 38 + i * 25;
+          const radius = 3 + (item.value * 8);
+
+          acousticLegend.append('circle')
+            .attr('cx', 20)
+            .attr('cy', yPos)
+            .attr('r', radius)
+            .style('fill', 'purple')
+            .style('opacity', 0.6)
+            .style('stroke', 'white');
+
+          acousticLegend.append('text')
+            .attr('x', 40)
+            .attr('y', yPos + 4)
+            .text(item.label)
+            .style('font-size', '11px');
+        });
+      }
+    }
+
+    function createDurationChart(data) {
+      const select = document.getElementById('genreSelect2');
+
+      Object.keys(genre_dict).forEach(genre => {
+        const option = document.createElement('option');
+        option.value = genre;
+        option.textContent = genre;
+        select.appendChild(option);
+      });
+
+      select.value = 'Hip-Hop & Urban';
+
+      updateChart2('Hip-Hop & Urban');
+
+      select.addEventListener('change', function() {
+        updateChart2(this.value);
+      });
+
+      function updateChart2(selectedGenre) {
+        d3.select('#chart2').selectAll('*').remove();
+
+        const genreList = genre_dict[selectedGenre];
+        const filteredData = allData.filter(d => genreList.includes(d.track_genre));
+
+        if (filteredData.length === 0) {
+          d3.select('#chart2').append('p')
+            .text('No data available for this genre category');
+          return;
+        }
+
+        const width = 800;
+        const height = 600;
+        const margin = { top: 50, bottom: 50, left: 50, right: 50 };
+
+        const svg = d3.select('#chart2')
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .style('background', 'white');
+
+        const xScale = d3.scaleLinear()
+          .domain([0, d3.max(filteredData, d => d.duration) * 1.1])
+          .range([margin.left, width - margin.right]);
+
+        const yScale = d3.scaleLinear()
+          .domain([0, d3.max(filteredData, d => d.popularity) * 1.1])
+          .range([height - margin.bottom, margin.top]);
+
+        svg.append('g')
+          .call(d3.axisBottom().scale(xScale))
+          .attr('transform', `translate(0, ${height - margin.bottom})`);
+
+        svg.append('g')
+          .call(d3.axisLeft().scale(yScale))
+          .attr('transform', `translate(${margin.left}, 0)`);
+
+        svg.append('text')
+          .attr('x', width / 2)
+          .attr('y', height - 15)
+          .text('Duration (minutes)')
+          .style('text-anchor', 'middle');
+
+        svg.append('text')
+          .attr('x', 0 - height / 2)
+          .attr('y', 15)
+          .text('Popularity')
+          .style('text-anchor', 'middle')
+          .attr('transform', 'rotate(-90)');
+
+        svg.append('text')
+          .attr('x', width / 2)
+          .attr('y', 30)
+          .text(`Duration vs. Popularity: ${selectedGenre}`)
+          .style('text-anchor', 'middle')
+          .style('font-size', '20px');
+
+        svg.append('g')
+          .selectAll("circle")
+          .data(filteredData)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(d.duration))
+          .attr("cy", d => yScale(d.popularity))
+          .attr("r", 2)
+          .style("fill", "#69b3a2")
+          .style("fill-opacity", 0.6)
+          .style('outline', .2);
+
+        function linearRegression(data) {
+          const n = data.length;
+          let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+
+          data.forEach(d => {
+            sumX += d.duration;
+            sumY += d.popularity;
+            sumXY += d.duration * d.popularity;
+            sumX2 += d.duration * d.duration;
+          });
+
+          const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+          const intercept = (sumY - slope * sumX) / n;
+
+          return { slope, intercept };
+        }
+
+        const regression = linearRegression(filteredData);
+        const xMin = 0;
+        const xMax = d3.max(filteredData, d => d.duration);
+        const lineData = [
+          { duration: xMin, popularity: regression.slope * xMin + regression.intercept },
+          { duration: xMax, popularity: regression.slope * xMax + regression.intercept }
+        ];
+
+        const getLine = d3.line()
+          .x(d => xScale(d.duration))
+          .y(d => yScale(d.popularity));
+
+        svg.append("path")
+          .attr("d", getLine(lineData))
+          .attr("fill", "none")
+          .attr("stroke", "#3a917d")
+          .attr("stroke-width", 1)
+          .attr("opacity", 0.7);
+
+        svg.append("text")
+          .attr("x", width - margin.right - 10)
+          .attr("y", margin.top + 20)
+          .attr("text-anchor", "end")
+          .text(`Line of Best Fit: y = ${regression.slope.toFixed(2)}x + ${regression.intercept.toFixed(2)}`)
+          .style("fill", "black")
+          .style("font-size", "14px");
+      }
+    }
+  </script>
+</body>
+</html>

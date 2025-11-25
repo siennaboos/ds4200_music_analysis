@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Average Liveness by Genre Category</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    #vis {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div id="vis"></div>
+
+  <script type="text/javascript">
+    const genre_dict = {
+      'Rock & Alternative': [
+        'alt-rock', 'alternative', 'grunge', 'hard-rock', 'indie',
+        'psych-rock', 'punk-rock', 'punk', 'rock', 'rock-n-roll',
+        'guitar', 'goth', 'emo', 'garage', 'industrial', 'grindcore',
+        'hardcore'
+      ],
+      'Metal': [
+        'black-metal', 'death-metal', 'heavy-metal', 'metal',
+        'metalcore', 'power-pop'
+      ],
+      'Electronic & Dance': [
+        'breakbeat', 'chicago-house', 'club', 'dance', 'deep-house',
+        'detroit-techno', 'disco', 'drum-and-bass', 'dubstep', 'edm',
+        'electro', 'electronic', 'hardstyle', 'house', 'idm',
+        'minimal-techno', 'progressive-house', 'techno', 'trance',
+        'synth-pop', 'groove'
+      ],
+      'Hip-Hop & Urban': [
+        'hip-hop', 'r-n-b', 'soul', 'funk', 'dub', 'trip-hop'
+      ],
+      'Pop': [
+        'pop', 'indie-pop', 'pop-film', 'party'
+      ],
+      'Country & Folk Americana': [
+        'country', 'folk', 'bluegrass', 'honky-tonk',
+        'singer-songwriter', 'songwriter', 'acoustic'
+      ],
+      'Jazz & Blues': [
+        'jazz', 'blues', 'gospel'
+      ],
+      'Latin & Caribbean': [
+        'latin', 'latino', 'reggae', 'reggaeton', 'dancehall',
+        'salsa', 'samba', 'tango', 'brazil', 'forro', 'pagode'
+      ],
+      'Brazilian': [
+        'mpb', 'sertanejo'
+      ],
+      'Asian Pop & Regional': [
+        'j-pop', 'j-rock', 'j-dance', 'j-idol', 'k-pop',
+        'cantopop', 'mandopop', 'indian', 'malay'
+      ],
+      'European & Regional': [
+        'french', 'german', 'british', 'swedish', 'turkish',
+        'iranian', 'spanish'
+      ],
+      'Classical & Sophisticated': [
+        'classical', 'opera', 'new-age', 'piano'
+      ],
+      'Mood & Ambient': [
+        'ambient', 'chill', 'happy', 'sad', 'sleep', 'study'
+      ],
+      'World & Traditional': [
+        'world-music', 'afrobeat', 'ska'
+      ],
+      'Specialty & Novelty': [
+        'anime', 'children', 'kids', 'comedy', 'disney',
+        'show-tunes', 'romance', 'rockabilly'
+      ]
+    };
+
+    // Load and process data
+    fetch('dataset.csv')
+      .then(response => response.text())
+      .then(csvText => {
+        const rows = csvText.split('\n');
+        const headers = rows[0].split(',');
+        const genreIndex = headers.indexOf('track_genre');
+        const livenessIndex = headers.indexOf('liveness');
+
+        // Create genre to category mapping
+        const genreToCategory = {};
+        for (const [category, genres] of Object.entries(genre_dict)) {
+          genres.forEach(genre => {
+            genreToCategory[genre] = category;
+          });
+        }
+
+        // Calculate average liveness by category
+        const categoryData = {};
+        const categoryCounts = {};
+
+        for (let i = 1; i < rows.length; i++) {
+          if (!rows[i].trim()) continue;
+          const cols = rows[i].split(',');
+          const genre = cols[genreIndex];
+          const liveness = parseFloat(cols[livenessIndex]);
+
+          if (!genre || isNaN(liveness)) continue;
+
+          const category = genreToCategory[genre];
+          if (!category) continue;
+
+          if (!categoryData[category]) {
+            categoryData[category] = 0;
+            categoryCounts[category] = 0;
+          }
+
+          categoryData[category] += liveness;
+          categoryCounts[category] += 1;
+        }
+
+        // Create data array
+        const data = [];
+        for (const [category, total] of Object.entries(categoryData)) {
+          data.push({
+            genre_category: category,
+            liveness: total / categoryCounts[category]
+          });
+        }
+
+        // Sort by liveness descending
+        data.sort((a, b) => b.liveness - a.liveness);
+
+        // Create Vega-Lite specification
+        const spec = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "data": {"values": data},
+          "width": 800,
+          "height": 500,
+          "title": "Average Liveness by Genre Category (Click to Highlight)",
+          "mark": "bar",
+          "encoding": {
+            "x": {
+              "field": "liveness",
+              "type": "quantitative",
+              "title": "Average Liveness Score",
+              "scale": {"domain": [0, 0.45]}
+            },
+            "y": {
+              "field": "genre_category",
+              "type": "nominal",
+              "title": "Genre Category",
+              "sort": "-x"
+            },
+            "color": {
+              "condition": {
+                "param": "select",
+                "field": "liveness",
+                "type": "quantitative",
+                "scale": {"scheme": "viridis"},
+                "legend": {"title": "Liveness"}
+              },
+              "value": "lightgray"
+            },
+            "opacity": {
+              "condition": {"param": "select", "value": 1},
+              "value": 0.3
+            },
+            "tooltip": [
+              {"field": "genre_category", "type": "nominal", "title": "Genre Category"},
+              {"field": "liveness", "type": "quantitative", "title": "Average Liveness", "format": ".4f"}
+            ]
+          },
+          "params": [{
+            "name": "select",
+            "select": {"type": "point", "fields": ["genre_category"]}
+          }]
+        };
+
+        vegaEmbed('#vis', spec);
+      })
+      .catch(error => {
+        console.error('Error loading data:', error);
+        document.getElementById('vis').innerHTML = '<p>Error loading dataset.csv</p>';
+      });
+  </script>
+</body>
+</html>
