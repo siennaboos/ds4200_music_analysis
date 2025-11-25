@@ -22,6 +22,9 @@
     <div id="popularity-chart"></div>
   </div>
 
+  <h3>Genre vs. Popularity</h3>
+  <p>This visualization explores average popularity scores across our groupings of genres. The popularity metric ranges from 0 to 100 and captures how frequently tracks are played and how recently. Brazilian music leads with the highest score of 44.3. Pop follows at 42.1, maintaining its universally accessible appeal, while Asian Pop & Regional ranks third at 38.9, reflecting K-pop and J-pop's global rise. What's particularly intriguing is mood-based and ambient music scoring 38.9, suggesting that listeners are intentionally curating their auditory environment for psychological purposes like studying, sleeping, or finding calm. This connects directly to mental health and music psychology. The high popularity of mood-specific genres indicates people are increasingly using music as a tool for emotional regulation. Understanding which genres resonate broadly helps recognize how different musical traditions serve different psychological needs.</p>
+
   <hr>
 
   <h2>Liveness by Genre</h2>
@@ -29,6 +32,9 @@
   <div class="viz-container">
     <div id="liveness-chart"></div>
   </div>
+
+   <h3>Genre vs. Liveness</h3>
+   <p>Liveness in music refers to the perception of a real-time, human performance, which can be enhanced by audience presence, a sense of spontaneity, and acoustic qualities like reverberation. It is also a critical concept in distinguishing between a live performance and a recorded one, often carrying connotations of authenticity versus the artifice of recording. In this visualization, we measured the average liveness of all the tracks in each genre and compared them. Brazilian music by far had the most liveness relative to the other genres, with Latin & Caribbean and Specialty & Novelty following. Country & Folk Americana had the lowest measure of liveness. This could be a reflection of Brazilian culture having values of authenticity and interpersonal connection. In the mental health context of our research, listening to music with high liveness could help one's mental state. We hypothesize that it could reduce feelings of loneliness by adding an element of human connection that can be felt through the music. Future studies can test for an association.</p> 
 
   <hr>
 
@@ -42,6 +48,9 @@
     <div id="chart"></div>
   </div>
 
+  <h3>Energy vs. Valence Analysis</h3>
+  <p>This bubble plot demonstrates a somewhat direct link between energy and valence. The page allows the user to choose what genre's data points are being visualized, leading to very different dispersions. In general, there were significantly more non-explicit songs than explicit, and non-explicit songs had higher valence and energy. Energy and valence exhibited a mostly direct relationship throughout the major genres. The valence and energy of music are incredibly important when utilizing music to improve mood. The design idea of this visualization was to represent many facets of music and how they influence each other. Acousticness and explicitness, represented by size and color respectively, are the easiest to differentiate, as they are the highest in the visual hierarchy. Energy and valence, which are position based, are less visually striking, but still demonstrate a relationship. The original dataset contained many specific genres, which were grouped into major, overarching genres.</p>
+
   <hr>
 
   <h2>Duration vs Popularity</h2>
@@ -54,6 +63,9 @@
     <div id="chart2"></div>
   </div>
 
+  <h3>Duration vs. Popularity Analysis</h3>
+  <p>The page exhibits a scatter plot of the duration of a song versus its popularity. A line of best fit is also generated in order to demonstrate the trend of the popularity. In order to prevent major outliers, songs over 10 minutes were removed. The positivity of the line of best fit varied depending on genre, with Specialty & Novelty, Mood & Ambient, Classical & Sophisticated, European & Regional, Brazilian, Electronic & Dance all having a negative line of best fit, implying that popularity decreases as duration increases. The rest of the genres had a positive line of best fit and in general are higher energy than most of the negative genres. The scatter plot is meant to observe if duration affects popularity. As online streaming rises in popularity, songs are becoming longer. However, different genres attract different audiences, and people have different preferences for song length depending on the song genre. The interactive element of the graph allows users to view how duration affects popularity in different genres</p>
+
   <hr>
 
   <h2>Explicit Content Comparison</h2>
@@ -62,6 +74,12 @@
     <iframe src="ep_comparison_clean.html" style="height: 1200px;"></iframe>
   </div>
 
+  <h3>Elvis Presley: Valence vs. Acousticness Scatter Plot</h3>
+  <p>This visualization explores the emotional character of Elvis Presley's music by comparing valence (happiness/positivity) against acousticness (acoustic vs. electric production). The chart highlights how Elvis blended genres, showing clusters of upbeat, more acoustic tracks alongside moodier, instrumentally rich songs. The distribution reveals that while many songs lean toward a more acoustic feel, Elvis frequently recorded both bright, energetic tracks and more somber, soulful pieces. Clicking individual songs allows listeners to discover how sonic warmth and emotional tone intersect across his catalog. The scatter plot uses a clean two-axis approach, mapping valence vertically and acousticness horizontally to intuitively express emotional tone versus instrumental texture. Color encodes tempo, helping visually connect emotional energy with rhythmic pace, while interactive tooltips surface song-level detail without cluttering the view. A click filter reveals song titles, designed to make exploration fun and to encourage users to connect data points with specific tracks they know.</p>
+  
+  <h3>Elvis Presley: Loudness vs. Duration Scatter Plot</h3>
+  <p>This visualization compares track loudness to duration, showing how Elvis’ music varies in dynamic intensity and song structure. While many popular tracks fall into a middle-duration range with moderate loudness, users can spot standout songs that are softer ballads or more powerful, longer recordings. The interactive click feature makes it easy to surface notable exceptions — for instance, emotionally intimate tracks with lower volume or dramatic, extended performances that push intensity. A scatter format is used again because it provides the most clarity for identifying patterns and outliers between two continuous musical properties. Loudness is normalized to ensure fair comparison across recordings, while duration in minutes makes timing intuitive. Interactive labels are added only upon click to keep the canvas clean and attention-focused. This slow-reveal interaction mirrors the idea of “discovering” songs and gives space for deeper user exploration.</p>
+
   <hr>
 
   <h2>Sound Feature Comparison</h2>
@@ -69,6 +87,16 @@
   <div class="viz-container">
     <iframe src="ep_sound_comparison_clean.html" style="height: 1600px;"></iframe>
   </div>
+
+  <h3>Elvis Presley: Loudness vs. Duration Scatter Plot</h3>
+  <p>This visualization compares track loudness to duration, showing how Elvis' music varies in dynamic intensity and song structure. While many popular tracks fall into a middle-duration range with moderate loudness, users can spot standout songs that are softer ballads or more powerful, longer recordings. The interactive click feature makes it easy to surface notable exceptions — for instance, emotionally intimate tracks with lower volume or dramatic, extended performances that push intensity. A scatter format is used again because it provides the most clarity for identifying patterns and outliers between two continuous musical properties. Loudness is normalized to ensure fair comparison across recordings, while duration in minutes makes timing intuitive. Interactive labels are added only upon click to keep the canvas clean and attention-focused. This slow-reveal interaction mirrors the idea of "discovering" songs and gives space for deeper user exploration.</p>
+
+  <h3>Elvis Presley: Energy vs. Danceability Scatter Plot</h3>
+  <p>This chart examines how energetic Elvis' songs are versus how danceable they feel. The trend shows that while many tracks maintain strong musical drive — true to his pioneering role in rock and roll — there is still wide variation in danceability. Popular songs (shown through color) tend to cluster in the higher-energy ranges, emphasizing how Elvis' most iconic music pairs intensity with rhythmic movement. The visualization reinforces his influence in shaping energetic, rhythm-forward popular music. Energy and danceability are core Spotify audio metrics that meaningfully represent Elvis' artistic style, making them ideal axes. Song points are sized for clarity and slightly transparent to handle overlap. Color encodes popularity, allowing users to visually connect fan favorites with energetic qualities. Interactive tooltips reveal track details so viewers can build a deeper appreciation of the music behind patterns.</p>
+  
+  <h3>Elvis Presley: Distribution of Song Duration Histogram</h3>
+  <p>This histogram shows how long Elvis' tracks tend to run, revealing a strong concentration of songs around the 2–3 minute mark. This reflects the recording standards of the era — shorter radio-friendly singles dominated, reinforcing Elvis' role in shaping early pop-rock formats. The distribution highlights how tightly structured and accessible his music was, while still showing occasional longer recordings tied to more dramatic or narrative-driven songs. A histogram is used to clearly represent frequency of song length ranges. Binning duration in minutes creates familiar intervals for listeners. Popularity-based color variation adds musical context without overwhelming the primary distribution insight. Placing this chart below the scatter plot creates a complementary view — first exploring relationships between attributes, then grounding those findings in time-based structure.</p>
+
 
   <script>
     const genre_dict = {
