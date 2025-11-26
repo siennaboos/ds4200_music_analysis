@@ -74,12 +74,16 @@
 
   <h2>Sound Feature Comparison</h2>
   <p>Detailed comparison of sound characteristics between explicit and non-explicit content.</p>
+  <div class="viz-container">
+    <iframe src="loudness_energy_genre_grouped.html" style="height: 650px;"></iframe>
+  </div>
 
+  <hr>
 
   <h2>Elvis Presley General Overview</h2>
   <p>Comparing valence, acoustiness, and loudness of songs.</p>
   <div class="viz-container">
-    <iframe src="ep_comparison_clean.html" style="height: 1200px;"></iframe>
+    <iframe src="ep_comparison_clean.html" style="height: 900px;"></iframe>
   </div>
 
   <h3>Elvis Presley: Valence vs. Acousticness Scatter Plot</h3>
@@ -93,7 +97,7 @@
   <h2>Elvis Presley Deep Dive</h2>
   <p>Detailed comparison of loudness and energy in regards to duration and dancibility.</p>
   <div class="viz-container">
-    <iframe src="ep_sound_comparison_clean.html" style="height: 1600px;"></iframe>
+    <iframe src="ep_sound_comparison_clean.html" style="height: 1350px;"></iframe>
   </div>
 
   <h3>Elvis Presley: Loudness vs. Duration Scatter Plot</h3>
@@ -482,15 +486,15 @@
 
         const explicitLegend = svg.append('g').attr('transform', `translate(${margin.left + 10}, ${margin.top + 10})`);
         explicitLegend.append('rect').attr('class', 'legend-box').attr('x', 0).attr('y', 0).attr('width', 140).attr('height', 70).attr('fill', 'white').attr('stroke', '#ccc').attr('rx', 4);
-        explicitLegend.append('text').attr('x', 10).attr('y', 20).text('Explicitness').style('font-weight', 'bold').style('font-size', '12px');
+        explicitLegend.append('text').attr('x', 10).attr('y', 20).text('Explicitness').style('font-weight', 'bold').style('font-size', '12px').style('fill', '#333');
         explicitLegend.append('circle').attr('cx', 20).attr('cy', 38).attr('r', 6).style('fill', 'navy').style('opacity', 0.6).style('stroke', 'white');
-        explicitLegend.append('text').attr('x', 32).attr('y', 42).text('Non-Explicit').style('font-size', '11px');
+        explicitLegend.append('text').attr('x', 32).attr('y', 42).text('Non-Explicit').style('font-size', '11px').style('fill', '#555');
         explicitLegend.append('circle').attr('cx', 20).attr('cy', 58).attr('r', 6).style('fill', 'purple').style('opacity', 0.6).style('stroke', 'white');
-        explicitLegend.append('text').attr('x', 32).attr('y', 62).text('Explicit').style('font-size', '11px');
+        explicitLegend.append('text').attr('x', 32).attr('y', 62).text('Explicit').style('font-size', '11px').style('fill', '#555');
 
         const acousticLegend = svg.append('g').attr('transform', `translate(${width - margin.right - 150}, ${margin.top + 10})`);
         acousticLegend.append('rect').attr('class', 'legend-box').attr('x', 0).attr('y', 0).attr('width', 140).attr('height', 110).attr('fill', 'white').attr('stroke', '#ccc').attr('rx', 4);
-        acousticLegend.append('text').attr('x', 10).attr('y', 20).text('Acousticness').style('font-weight', 'bold').style('font-size', '12px');
+        acousticLegend.append('text').attr('x', 10).attr('y', 20).text('Acousticness').style('font-weight', 'bold').style('font-size', '12px').style('fill', '#333');
 
         const acousticSizes = [
           { value: 0.1, label: 'Low (0.1)' },
@@ -502,7 +506,7 @@
           const yPos = 38 + i * 25;
           const radius = 3 + (item.value * 8);
           acousticLegend.append('circle').attr('cx', 20).attr('cy', yPos).attr('r', radius).style('fill', 'purple').style('opacity', 0.6).style('stroke', 'white');
-          acousticLegend.append('text').attr('x', 40).attr('y', yPos + 4).text(item.label).style('font-size', '11px');
+          acousticLegend.append('text').attr('x', 40).attr('y', yPos + 4).text(item.label).style('font-size', '11px').style('fill', '#555');
         });
       }
     }
