@@ -81,33 +81,34 @@
   <hr>
 
   <h2>Elvis Presley General Overview</h2>
-  <p>Comparing valence, acoustiness, and loudness of songs.</p>
+  <p>Comparing energy, danceability, and song duration.</p>
   <div class="viz-container">
-    <iframe src="ep_comparison_clean.html" style="height: 900px;"></iframe>
+    <iframe src="ep_comparison_interactive.html" style="height: 900px;"></iframe>
   </div>
 
-  <h3>Elvis Presley: Valence vs. Acousticness Scatter Plot</h3>
-  <p>This visualization explores the emotional character of Elvis Presley's music by comparing valence (happiness/positivity) against acousticness (acoustic vs. electric production). The chart highlights how Elvis blended genres, showing clusters of upbeat, more acoustic tracks alongside moodier, instrumentally rich songs. The distribution reveals that while many songs lean toward a more acoustic feel, Elvis frequently recorded both bright, energetic tracks and more somber, soulful pieces. Clicking individual songs allows listeners to discover how sonic warmth and emotional tone intersect across his catalog. The scatter plot uses a clean two-axis approach, mapping valence vertically and acousticness horizontally to intuitively express emotional tone versus instrumental texture. Color encodes tempo, helping visually connect emotional energy with rhythmic pace, while interactive tooltips surface song-level detail without cluttering the view. A click filter reveals song titles, designed to make exploration fun and to encourage users to connect data points with specific tracks they know.</p>
+  <h3>Elvis Presley: Energy vs. Danceability Scatter Plot</h3>
+  <p>This visualization explores how Elvis Presley's music balances energy and danceability. The scatter plot maps energy (intensity and activity) against danceability (how suitable a track is for dancing), with points colored by valence (mood/positivity) and sized by popularity. The distribution reveals Elvis's versatility - from high-energy dance tracks to mellower ballads. Hover over any point to see detailed information about the track including its name, album, popularity, duration, valence, and tempo. The color gradient shows how emotional tone correlates with energy and danceability patterns.</p>
   
-  <h3>Elvis Presley: Loudness vs. Duration Scatter Plot</h3>
-  <p>This visualization compares track loudness to duration, showing how Elvis’ music varies in dynamic intensity and song structure. While many popular tracks fall into a middle-duration range with moderate loudness, users can spot standout songs that are softer ballads or more powerful, longer recordings. The interactive click feature makes it easy to surface notable exceptions — for instance, emotionally intimate tracks with lower volume or dramatic, extended performances that push intensity. A scatter format is used again because it provides the most clarity for identifying patterns and outliers between two continuous musical properties. Loudness is normalized to ensure fair comparison across recordings, while duration in minutes makes timing intuitive. Interactive labels are added only upon click to keep the canvas clean and attention-focused. This slow-reveal interaction mirrors the idea of “discovering” songs and gives space for deeper user exploration.</p>
+  
+  <h3>Elvis Presley: Song Duration Distribution</h3>
+  <p>This histogram shows the distribution of song lengths across Elvis's catalog. Most of his tracks fall into the 2-3 minute range, typical of the era's radio-friendly format. The bars are colored by popularity, revealing that both shorter and longer tracks achieved success. This visualization helps understand Elvis's approach to song structure and how track length varied across his extensive recording career.</p>
 
   <hr>
 
   <h2>Elvis Presley Deep Dive</h2>
-  <p>Detailed comparison of loudness and energy in regards to duration and dancibility.</p>
+  <p>Interactive exploration of acoustic qualities, tempo, and song characteristics. Click on any point to reveal the song name!</p>
   <div class="viz-container">
-    <iframe src="ep_sound_comparison_clean.html" style="height: 1350px;"></iframe>
+    <iframe src="ep_sound_comparison_interactive.html" style="height: 1350px;"></iframe>
   </div>
 
-  <h3>Elvis Presley: Loudness vs. Duration Scatter Plot</h3>
-  <p>This visualization compares track loudness to duration, showing how Elvis' music varies in dynamic intensity and song structure. While many popular tracks fall into a middle-duration range with moderate loudness, users can spot standout songs that are softer ballads or more powerful, longer recordings. The interactive click feature makes it easy to surface notable exceptions — for instance, emotionally intimate tracks with lower volume or dramatic, extended performances that push intensity. A scatter format is used again because it provides the most clarity for identifying patterns and outliers between two continuous musical properties. Loudness is normalized to ensure fair comparison across recordings, while duration in minutes makes timing intuitive. Interactive labels are added only upon click to keep the canvas clean and attention-focused. This slow-reveal interaction mirrors the idea of "discovering" songs and gives space for deeper user exploration.</p>
+  <h3>Elvis Presley: Valence vs. Acousticness Scatter Plot (Interactive)</h3>
+  <p>This interactive visualization explores the emotional character of Elvis Presley's music by comparing valence (happiness/positivity) against acousticness (acoustic vs. electric production). Click on any point to reveal the song name - the selected point will turn red and the title will appear next to it. The chart highlights how Elvis blended genres, showing clusters of upbeat, more acoustic tracks alongside moodier, instrumentally rich songs. Color encodes tempo, helping visually connect emotional energy with rhythmic pace. This click-to-reveal interaction encourages exploration and helps connect data points with specific tracks you know.</p>
 
-  <h3>Elvis Presley: Energy vs. Danceability Scatter Plot</h3>
-  <p>This chart examines how energetic Elvis' songs are versus how danceable they feel. The trend shows that while many tracks maintain strong musical drive — true to his pioneering role in rock and roll — there is still wide variation in danceability. Popular songs (shown through color) tend to cluster in the higher-energy ranges, emphasizing how Elvis' most iconic music pairs intensity with rhythmic movement. The visualization reinforces his influence in shaping energetic, rhythm-forward popular music. Energy and danceability are core Spotify audio metrics that meaningfully represent Elvis' artistic style, making them ideal axes. Song points are sized for clarity and slightly transparent to handle overlap. Color encodes popularity, allowing users to visually connect fan favorites with energetic qualities. Interactive tooltips reveal track details so viewers can build a deeper appreciation of the music behind patterns.</p>
+  <h3>Elvis Presley: Tempo Distribution</h3>
+  <p>This histogram displays the distribution of song tempos (beats per minute) across Elvis's catalog. The data shows a concentration around 90-120 BPM, reflecting the rock and roll and ballad styles that defined much of his work. This tempo range encompasses everything from slower ballads to upbeat rock numbers, demonstrating the rhythmic diversity in his recordings.</p>
   
-  <h3>Elvis Presley: Distribution of Song Duration Histogram</h3>
-  <p>This histogram shows how long Elvis' tracks tend to run, revealing a strong concentration of songs around the 2–3 minute mark. This reflects the recording standards of the era — shorter radio-friendly singles dominated, reinforcing Elvis' role in shaping early pop-rock formats. The distribution highlights how tightly structured and accessible his music was, while still showing occasional longer recordings tied to more dramatic or narrative-driven songs. A histogram is used to clearly represent frequency of song length ranges. Binning duration in minutes creates familiar intervals for listeners. Popularity-based color variation adds musical context without overwhelming the primary distribution insight. Placing this chart below the scatter plot creates a complementary view — first exploring relationships between attributes, then grounding those findings in time-based structure.</p>
+  <h3>Elvis Presley: Loudness vs. Duration Scatter Plot (Interactive)</h3>
+  <p>This visualization compares track loudness to duration, showing how Elvis' music varies in dynamic intensity and song structure. While many popular tracks fall into a middle-duration range with moderate loudness, users can spot standout songs that are softer ballads or more powerful, longer recordings. The interactive click feature makes it easy to surface notable exceptions — for instance, emotionally intimate tracks with lower volume or dramatic, extended performances that push intensity. A scatter format is used again because it provides the most clarity for identifying patterns and outliers between two continuous musical properties. Loudness is normalized to ensure fair comparison across recordings, while duration in minutes makes timing intuitive. Interactive labels are added only upon click to keep the canvas clean and attention-focused. This slow-reveal interaction mirrors the idea of "discovering" songs and gives space for deeper user exploration.</p>
 
 
   <script>
