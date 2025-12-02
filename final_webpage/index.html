@@ -80,7 +80,7 @@
   <hr>
 
   <h2>Sound Feature Comparison</h2>
-  <p>Detailed comparison of sound characteristics between explicit and non-explicit content.</p>
+  <p>Detailed comparison of sound characteristics between genres.</p>
   <div class="viz-container">
     <iframe src="loudness_energy_genre_grouped.html" style="height: 650px;"></iframe>
   </div>
@@ -487,7 +487,16 @@
         svg.append('g').call(d3.axisLeft(yScale)).attr('transform', `translate(${margin.left}, 0)`);
         svg.append('text').attr('x', width / 2).attr('y', height - 15).text('Energy').style('text-anchor', 'middle').style('font-size', '14px');
         svg.append('text').attr('x', 0 - height / 2).attr('y', 15).text('Valence').style('text-anchor', 'middle').attr('transform', 'rotate(-90)').style('font-size', '14px');
-        svg.append('text').attr('x', width / 2).attr('y', 30).text(`Energy vs Valence: ${selectedGenre}`).style('text-anchor', 'middle').style('font-size', '16px');
+        
+        // Add title with background
+        const titleText = `Energy vs Valence: ${selectedGenre}`;
+        const titleGroup = svg.append('g');
+        const textElement = titleGroup.append('text').attr('x', width / 2).attr('y', 30).text(titleText).style('text-anchor', 'middle').style('font-size', '18px').style('font-weight', 'bold').style('fill', '#1DB954');
+        
+        // Get bounding box and add background
+        const bbox = textElement.node().getBBox();
+        titleGroup.insert('rect', 'text').attr('x', bbox.x - 10).attr('y', bbox.y - 5).attr('width', bbox.width + 20).attr('height', bbox.height + 10).attr('fill', '#181818').attr('rx', 5).attr('opacity', 0.95);
+
 
         svg.append('g').selectAll("circle").data(cleanData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "navy").style("opacity", 0.6).style("stroke", "white").style("stroke-width", 0.5);
         svg.append('g').selectAll("circle").data(explicitData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "purple").style("opacity", 0.6).style("stroke", "white").style("stroke-width", 0.5);
@@ -561,7 +570,16 @@
         svg.append('g').call(d3.axisLeft().scale(yScale)).attr('transform', `translate(${margin.left}, 0)`);
         svg.append('text').attr('x', width / 2).attr('y', height - 15).text('Duration (minutes)').style('text-anchor', 'middle');
         svg.append('text').attr('x', 0 - height / 2).attr('y', 15).text('Popularity').style('text-anchor', 'middle').attr('transform', 'rotate(-90)');
-        svg.append('text').attr('x', width / 2).attr('y', 30).text(`Duration vs. Popularity: ${selectedGenre}`).style('text-anchor', 'middle').style('font-size', '20px');
+        
+        // Add title with background
+        const titleText = `Duration vs. Popularity: ${selectedGenre}`;
+        const titleGroup = svg.append('g');
+        const textElement = titleGroup.append('text').attr('x', width / 2).attr('y', 30).text(titleText).style('text-anchor', 'middle').style('font-size', '20px').style('font-weight', 'bold').style('fill', '#1DB954');
+        
+        // Get bounding box and add background
+        const bbox = textElement.node().getBBox();
+        titleGroup.insert('rect', 'text').attr('x', bbox.x - 10).attr('y', bbox.y - 5).attr('width', bbox.width + 20).attr('height', bbox.height + 10).attr('fill', '#181818').attr('rx', 5).attr('opacity', 0.95);
+
 
         svg.append('g').selectAll("circle").data(filteredData).enter().append("circle").attr("cx", d => xScale(d.duration)).attr("cy", d => yScale(d.popularity)).attr("r", 2).style("fill", "#69b3a2").style("fill-opacity", 0.6);
 
