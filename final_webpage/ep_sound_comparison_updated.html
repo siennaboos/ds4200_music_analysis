@@ -95,7 +95,7 @@
                 {
                   "params": [{
                     "name": "click",
-                    "select": {"type": "point", "on": "click", "fields": ["track_name"], "empty": false}
+                    "select": {"type": "point", "on": "click", "fields": ["track_name"], "clear": "dblclick"}
                   }],
                   "mark": {"type": "circle", "size": 90, "opacity": 0.7},
                   "encoding": {
@@ -124,12 +124,15 @@
                     "color": {
                       "condition": {
                         "param": "click",
-                        "value": "#e41a1c"
+                        "value": "#90EE90"
                       },
                       "field": "tempo",
                       "type": "quantitative",
-                      "scale": {"scheme": "plasma"},
+                      "scale": {
+                        "range": ["#064635", "#1B7357", "#2A9D6C", "#4CBB17", "#90EE90"]
+                      },
                       "legend": {
+                        "title": "Tempo",
                         "titleColor": "#ffffff",
                         "labelColor": "#ffffff"
                       }
@@ -171,7 +174,7 @@
               },
               "width": 600,
               "height": 300,
-              "mark": {"type": "bar", "opacity": 0.8, "color": "#2b83ba"},
+              "mark": {"type": "bar", "opacity": 0.8, "color": "#2A9D6C"},
               "encoding": {
                 "x": {
                   "field": "tempo",
@@ -209,10 +212,10 @@
               "layer": [
                 {
                   "params": [{
-                    "name": "click",
-                    "select": {"type": "point", "on": "click", "fields": ["track_name"], "empty": false}
+                    "name": "click2",
+                    "select": {"type": "point", "on": "click", "fields": ["track_name"], "clear": "dblclick"}
                   }],
-                  "mark": {"type": "circle", "size": 90, "opacity": 0.7, "color": "#d7191c"},
+                  "mark": {"type": "circle", "size": 90, "opacity": 0.7, "color": "#4CBB17"},
                   "encoding": {
                     "x": {
                       "field": "duration_min",
@@ -245,7 +248,7 @@
                   }
                 },
                 {
-                  "transform": [{"filter": {"param": "click"}}],
+                  "transform": [{"filter": {"param": "click2"}}],
                   "mark": {
                     "type": "text",
                     "align": "left",
