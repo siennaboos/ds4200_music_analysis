@@ -76,7 +76,7 @@
           }
         }
 
-        // Create Vega-Lite specification
+        // Create Vega-Lite specification with brush selection
         const spec = {
           "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
           "background": "#121212",
@@ -91,16 +91,18 @@
               },
               "width": 600,
               "height": 400,
-              "params": [{
-                "name": "brush",
-                "select": {"type": "interval", "encodings": ["x", "y"]}
-              }],
               "layer": [
                 {
-                  "params": [{
-                    "name": "click",
-                    "select": {"type": "point", "on": "click", "fields": ["track_name", "acousticness", "valence"]}
-                  }],
+                  "params": [
+                    {
+                      "name": "brush",
+                      "select": {"type": "interval"}
+                    },
+                    {
+                      "name": "click",
+                      "select": {"type": "point", "on": "click", "fields": ["track_name", "acousticness", "valence"]}
+                    }
+                  ],
                   "mark": {"type": "circle", "size": 90, "opacity": 0.7},
                   "encoding": {
                     "x": {
@@ -301,11 +303,6 @@
               ]
             }
           ],
-          "resolve": {
-            "scale": {
-              "color": "independent"
-            }
-          },
           "config": {
             "background": "#121212",
             "view": {
