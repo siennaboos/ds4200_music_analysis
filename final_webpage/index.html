@@ -238,9 +238,9 @@
         .range([0, height])
         .padding(0.2);
 
-      const colorScale = d3.scaleSequential()
+      const colorScale = d3.scaleLinear()
         .domain([0, d3.max(popularityData, d => d.popularity)])
-        .interpolator(d3.interpolateViridis);
+        .range(['#90EE90', '#008000']);
 
       svg.append("g")
         .attr("transform", `translate(0,${height})`)
