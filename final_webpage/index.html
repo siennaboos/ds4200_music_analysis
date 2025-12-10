@@ -16,7 +16,7 @@
 
 <h2>Introduction</h2>
 <p>Music is an incredibly important aspect of human life and culture, and has the ability to reach and move people in unique ways. In recent years, as the mental health crisis worsens in intensity, music has been linked to regulating emotion and increasing motivation. Additionally, it improves physical performance, which is also a major benefit as exercise is a great way to combat mental illness. Our project aims to analyze many aspects of music and determine how they can be utilized to improve people's mental health. Music and playlists are an accessible and well-received way to influence mood and wellbeing, so we wanted to implement elements of psychology, sports science, and data analytics to create dynamic and interactive data visualizations. We chose to use webscraped Spotify data, as the app's user base is predominantly younger generations, which is also the age demographic that struggles most with their mental health.</p>
-  
+
 <h2>Introduction to Data</h2>
 <p>Our Spotify data, sourced from Kaggle, came cleaned and preprocessed and containing over 500,000 tracks. Featuring 21 different parameters, there were many options of musical aspects to focus on in regards to mental health. Factors like valence and energy, for example, are incredibly important in boosting mood and motivation, while ones like popularity can determine what musical aspects and genres are best received from a social and psychological viewpoint. To create a more complex narrative, we focused on many different musical features, and even created a case study on a popular artist. In total, we used 11 different columns:</p>
 
@@ -36,345 +36,345 @@
 
 <p>Many of our visualizations were genre based, so we created wider genres to sort the 114 unique genres into.</p>
 
-   <p>If you want to learn more about the implications of music in mental health, visit the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8566759/" target="_blank">National Library of Medicine</a>. To learn more about general applications of music, visit <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8167645/" target="_blank">this article</a>.</p>
-  
+<p>If you want to learn more about the implications of music in mental health, visit the <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8566759/" target="_blank">National Library of Medicine</a>. To learn more about general applications of music, visit <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8167645/" target="_blank">this article</a>.</p>
+
 <hr>
 
-  <h2>Popularity by Genre</h2>
-  <p>Average popularity scores across genre categories. Click bars to highlight.</p>
-  <div class="viz-container">
-    <div id="popularity-chart"></div>
-  </div>
+<h2>Popularity by Genre</h2>
+<p>Average popularity scores across genre categories. Click bars to highlight.</p>
+<div class="viz-container">
+  <div id="popularity-chart"></div>
+</div>
 
-  <h3>Genre vs. Popularity</h3>
-  <p>This visualization explores average popularity scores across our groupings of genres. The popularity metric ranges from 0 to 100 and captures how frequently tracks are played and how recently. Brazilian music leads with the highest score of 44.3. Pop follows at 42.1, maintaining its universally accessible appeal, while Asian Pop & Regional ranks third at 38.9, reflecting K-pop and J-pop's global rise. What's particularly intriguing is mood-based and ambient music scoring 38.9, suggesting that listeners are intentionally curating their auditory environment for psychological purposes like studying, sleeping, or finding calm. This connects directly to mental health and music psychology. The high popularity of mood-specific genres indicates people are increasingly using music as a tool for emotional regulation. Understanding which genres resonate broadly helps recognize how different musical traditions serve different psychological needs.</p>
+<h3>Genre vs. Popularity</h3>
+<p>This visualization explores average popularity scores across our groupings of genres. The popularity metric ranges from 0 to 100 and captures how frequently tracks are played and how recently. Brazilian music leads with the highest score of 44.3. Pop follows at 42.1, maintaining its universally accessible appeal, while Asian Pop & Regional ranks third at 38.9, reflecting K-pop and J-pop's global rise. What's particularly intriguing is mood-based and ambient music scoring 38.9, suggesting that listeners are intentionally curating their auditory environment for psychological purposes like studying, sleeping, or finding calm. This connects directly to mental health and music psychology. The high popularity of mood-specific genres indicates people are increasingly using music as a tool for emotional regulation. Understanding which genres resonate broadly helps recognize how different musical traditions serve different psychological needs.</p>
 
-  <hr>
+<hr>
 
-  <h2>Liveness by Genre</h2>
-  <p>Distribution of liveness scores showing how likely tracks were recorded with a live audience.</p>
-  <div class="viz-container">
-    <iframe src="genre_liveness.html" style="height: 650px;"></iframe>
-  </div>
+<h2>Liveness by Genre</h2>
+<p>Distribution of liveness scores showing how likely tracks were recorded with a live audience.</p>
+<div class="viz-container">
+  <iframe src="genre_liveness.html" style="height: 650px;"></iframe>
+</div>
 
-   <h3>Genre vs. Liveness</h3>
-   <p>Liveness in music refers to the perception of a real-time, human performance, which can be enhanced by audience presence, a sense of spontaneity, and acoustic qualities like reverberation. It is also a critical concept in distinguishing between a live performance and a recorded one, often carrying connotations of authenticity versus the artifice of recording. In this visualization, we measured the liveness of all the tracks in each genre and compared them using a boxplot, this time using the median as our statistic rather than the average. Brazilian music by far had the most liveness relative to the other genres, with Metal and Specialty & Novelty following. Classical & Sophisticated had the lowest measure of liveness. This could be a reflection of Brazilian culture having values of authenticity and interpersonal connection. In the mental health context of our research, listening to music with high liveness could help to improve one's mental state. We hypothesize that it could reduce feelings of loneliness by adding an element of human connection that can be felt through the music. Future studies can test for an association.</p> 
+<h3>Genre vs. Liveness</h3>
+<p>Liveness in music refers to the perception of a real-time, human performance, which can be enhanced by audience presence, a sense of spontaneity, and acoustic qualities like reverberation. It is also a critical concept in distinguishing between a live performance and a recorded one, often carrying connotations of authenticity versus the artifice of recording. In this visualization, we measured the liveness of all the tracks in each genre and compared them using a boxplot, this time using the median as our statistic rather than the average. Brazilian music by far had the most liveness relative to the other genres, with Metal and Specialty & Novelty following. Classical & Sophisticated had the lowest measure of liveness. This could be a reflection of Brazilian culture having values of authenticity and interpersonal connection. In the mental health context of our research, listening to music with high liveness could help to improve one's mental state. We hypothesize that it could reduce feelings of loneliness by adding an element of human connection that can be felt through the music. Future studies can test for an association.</p>
 
-  <hr>
+<hr>
 
-  <h2>Energy vs Valence</h2>
-  <p>Relationship between energy and positivity. Bubble size represents acousticness, colors show explicit content.</p>
-  <div id="controls">
-    <label for="genreSelect">Genre:</label>
-    <select id="genreSelect"></select>
-  </div>
-  <div class="viz-container">
-    <div id="chart"></div>
-  </div>
+<h2>Energy vs Valence</h2>
+<p>Relationship between energy and positivity. Bubble size represents acousticness, colors show explicit content.</p>
+<div id="controls">
+  <label for="genreSelect">Genre:</label>
+  <select id="genreSelect"></select>
+</div>
+<div class="viz-container">
+  <div id="chart"></div>
+</div>
 
-  <h3>Energy vs. Valence Analysis</h3>
-  <p>This bubble plot demonstrates a somewhat direct link between energy and valence. The page allows the user to choose what genre's data points are being visualized, leading to very different dispersions. In general, there were significantly more non-explicit songs than explicit, and non-explicit songs had higher valence and energy. Energy and valence exhibited a mostly direct relationship throughout the major genres. The valence and energy of music are incredibly important when utilizing music to improve mood. The design idea of this visualization was to represent many facets of music and how they influence each other. Acousticness and explicitness, represented by size and color respectively, are the easiest to differentiate, as they are the highest in the visual hierarchy. Energy and valence, which are position based, are less visually striking, but still demonstrate a relationship. The original dataset contained many specific genres, which were grouped into major, overarching genres.</p>
+<h3>Energy vs. Valence Analysis</h3>
+<p>This bubble plot demonstrates a somewhat direct link between energy and valence. The page allows the user to choose what genre's data points are being visualized, leading to very different dispersions. In general, there were significantly more non-explicit songs than explicit, and non-explicit songs had higher valence and energy. Energy and valence exhibited a mostly direct relationship throughout the major genres. The valence and energy of music are incredibly important when utilizing music to improve mood. The design idea of this visualization was to represent many facets of music and how they influence each other. Acousticness and explicitness, represented by size and color respectively, are the easiest to differentiate, as they are the highest in the visual hierarchy. Energy and valence, which are position based, are less visually striking, but still demonstrate a relationship. The original dataset contained many specific genres, which were grouped into major, overarching genres.</p>
 
-  <hr>
+<hr>
 
-  <h2>Duration vs Popularity</h2>
-  <p>How track length relates to popularity, with regression line.</p>
-  <div id="controls2">
-    <label for="genreSelect2">Genre:</label>
-    <select id="genreSelect2"></select>
-  </div>
-  <div class="viz-container">
-    <div id="chart2"></div>
-  </div>
+<h2>Duration vs Popularity</h2>
+<p>How track length relates to popularity, with regression line.</p>
+<div id="controls2">
+  <label for="genreSelect2">Genre:</label>
+  <select id="genreSelect2"></select>
+</div>
+<div class="viz-container">
+  <div id="chart2"></div>
+</div>
 
-  <h3>Duration vs. Popularity Analysis</h3>
-  <p>The page exhibits a scatter plot of the duration of a song versus its popularity. A line of best fit is also generated in order to demonstrate the trend of the popularity. In order to prevent major outliers, songs over 10 minutes were removed. The positivity of the line of best fit varied depending on genre, with Specialty & Novelty, Mood & Ambient, Classical & Sophisticated, European & Regional, Brazilian, Electronic & Dance all having a negative line of best fit, implying that popularity decreases as duration increases. The rest of the genres had a positive line of best fit and in general are higher energy than most of the negative genres. The scatter plot is meant to observe if duration affects popularity. As online streaming rises in popularity, songs are becoming longer. However, different genres attract different audiences, and people have different preferences for song length depending on the song genre. The interactive element of the graph allows users to view how duration affects popularity in different genres</p>
+<h3>Duration vs. Popularity Analysis</h3>
+<p>The page exhibits a scatter plot of the duration of a song versus its popularity. A line of best fit is also generated in order to demonstrate the trend of the popularity. In order to prevent major outliers, songs over 10 minutes were removed. The positivity of the line of best fit varied depending on genre, with Specialty & Novelty, Mood & Ambient, Classical & Sophisticated, European & Regional, Brazilian, Electronic & Dance all having a negative line of best fit, implying that popularity decreases as duration increases. The rest of the genres had a positive line of best fit and in general are higher energy than most of the negative genres. The scatter plot is meant to observe if duration affects popularity. As online streaming rises in popularity, songs are becoming longer. However, different genres attract different audiences, and people have different preferences for song length depending on the song genre. The interactive element of the graph allows users to view how duration affects popularity in different genres</p>
 
-  <hr>
+<hr>
 
-  <h2>Explicit Content Comparison</h2>
-  <p>Comparing explicit and non-explicit tracks across various features.</p>
-  <div class="viz-container">
-    <iframe src="popularity_by_artist.html" style="height: 650px;"></iframe>
-  </div>
+<h2>Explicit Content Comparison</h2>
+<p>Comparing explicit and non-explicit tracks across various features.</p>
+<div class="viz-container">
+  <iframe src="popularity_by_artist.html" style="height: 650px;"></iframe>
+</div>
 
-  <h3>Popularity by Artists Analysis</h3>
-  <p>From the chart, we can see that popularity varies widely across artists, with no single consistent pattern linking explicit content to higher or lower popularity. Some artists, such as Daddy Yankee and Håkan Hellström, exhibit higher popularity for their explicit tracks, in contrast to others like The Beatles, Red Hot Chili Peppers, and OneRepublic, who have the opposite trend, with non-explicit tracks being more popular. This suggests that explicit content is not a strong predictor of a track's popularity; instead, popularity is likely driven by the artist's style, fan base, and cultural reach, rather than the presence of explicit lyrics. The mixed patterns across artists highlight that explicitness is not uniformly associated with higher or lower commercial success.</p>
+<h3>Popularity by Artists Analysis</h3>
+<p>From the chart, we can see that popularity varies widely across artists, with no single consistent pattern linking explicit content to higher or lower popularity. Some artists, such as Daddy Yankee and Håkan Hellström, exhibit higher popularity for their explicit tracks, in contrast to others like The Beatles, Red Hot Chili Peppers, and OneRepublic, who have the opposite trend, with non-explicit tracks being more popular. This suggests that explicit content is not a strong predictor of a track's popularity; instead, popularity is likely driven by the artist's style, fan base, and cultural reach, rather than the presence of explicit lyrics. The mixed patterns across artists highlight that explicitness is not uniformly associated with higher or lower commercial success.</p>
 
-  <hr>
+<hr>
 
-  <h2>Sound Feature Comparison</h2>
-  <p>Detailed comparison of sound characteristics between genres.</p>
-  <div class="viz-container">
-    <iframe src="loudness_energy_genre_grouped.html" style="height: 650px;"></iframe>
-  </div>
+<h2>Sound Feature Comparison</h2>
+<p>Detailed comparison of sound characteristics between genres.</p>
+<div class="viz-container">
+  <iframe src="loudness_energy_genre_grouped.html" style="height: 650px;"></iframe>
+</div>
 
-  <hr>
+<hr>
 
-  <h2>Elvis Presley General Overview</h2>
-  <p>Click and drag on the scatter plot to select points. The histogram below will highlight songs within your selection. Songs outside your selection will appear dimmed. Click anywhere on white space to clear your selection</p>
-  <div class="viz-container">
-    <iframe src="ep_comparison_updated.html" style="height: 900px;"></iframe>
-  </div>
+<h2>Elvis Presley General Overview</h2>
+<p>Click and drag on the scatter plot to select points. The histogram below will highlight songs within your selection. Songs outside your selection will appear dimmed. Click anywhere on white space to clear your selection</p>
+<div class="viz-container">
+  <iframe src="ep_comparison_updated.html" style="height: 900px;"></iframe>
+</div>
 
-  <h3>Energy vs Danceability Analysis - What This Visualization Reveals</h3>
-  <p>This interactive visualization reveals fascinating patterns in Elvis Presley's musical evolution and compositional choices. By exploring the relationship between energy and danceability, we can identify distinct clusters in Elvis's catalog: high-energy, highly danceable tracks like "Jailhouse Rock" and "Hound Dog" represent his rock and roll peak, while lower-energy, less danceable songs like "Can't Help Falling in Love" showcase his romantic ballad side. The valence (mood/happiness) encoding through green color gradients demonstrates that Elvis's most popular songs (shown by larger bubbles) tend to cluster in the higher valence range, suggesting audiences were drawn to his more upbeat, positive music. The linked duration histogram reveals an important temporal pattern: when you select his high-energy dance tracks, the histogram shows these songs tend to be shorter (2-3 minutes), optimized for radio play and maximum impact. Conversely, selecting lower-energy tracks reveals longer durations, indicating Elvis used extended runtime for emotional storytelling in ballads. This relationship between musical characteristics and song structure provides insight into how commercial considerations and artistic expression balanced in Elvis's work. The visualization also exposes interesting outliers—songs with unusual combinations of energy and danceability—that represent Elvis's experimental phases or genre-crossing attempts. For mental health and music psychology research, this analysis demonstrates how song characteristics cluster around specific emotional profiles, supporting the hypothesis that energetic, danceable music with positive valence serves different psychological functions than slower, contemplative pieces.</p>
+<h3>Energy vs Danceability Analysis - What This Visualization Reveals</h3>
+<p>This interactive visualization reveals fascinating patterns in Elvis Presley's musical evolution and compositional choices. By exploring the relationship between energy and danceability, we can identify distinct clusters in Elvis's catalog: high-energy, highly danceable tracks like "Jailhouse Rock" and "Hound Dog" represent his rock and roll peak, while lower-energy, less danceable songs like "Can't Help Falling in Love" showcase his romantic ballad side. The valence (mood/happiness) encoding through green color gradients demonstrates that Elvis's most popular songs (shown by larger bubbles) tend to cluster in the higher valence range, suggesting audiences were drawn to his more upbeat, positive music. The linked duration histogram reveals an important temporal pattern: when you select his high-energy dance tracks, the histogram shows these songs tend to be shorter (2-3 minutes), optimized for radio play and maximum impact. Conversely, selecting lower-energy tracks reveals longer durations, indicating Elvis used extended runtime for emotional storytelling in ballads. This relationship between musical characteristics and song structure provides insight into how commercial considerations and artistic expression balanced in Elvis's work. The visualization also exposes interesting outliers—songs with unusual combinations of energy and danceability—that represent Elvis's experimental phases or genre-crossing attempts. For mental health and music psychology research, this analysis demonstrates how song characteristics cluster around specific emotional profiles, supporting the hypothesis that energetic, danceable music with positive valence serves different psychological functions than slower, contemplative pieces.</p>
 
-  <hr>
+<hr>
 
-  <h2>Elvis Presley Deep Dive</h2>
-  <p>Click and drag on the top scatter plot (Valence vs Acousticness) to select songs. The tempo histogram in the middle will highlight selected songs. The bottom scatter plot (Loudness vs Duration) will also highlight your selection. All three charts are linked - your selection affects all visualizations. Click anywhere on white space to clear your selection</p>
-  <div class="viz-container">
-    <iframe src="ep_sound_comparison_updated.html" style="height: 1350px;"></iframe>
-  </div>
+<h2>Elvis Presley Deep Dive</h2>
+<p>Click and drag on the top scatter plot (Valence vs Acousticness) to select songs. The tempo histogram in the middle will highlight selected songs. The bottom scatter plot (Loudness vs Duration) will also highlight your selection. All three charts are linked - your selection affects all visualizations. Click anywhere on white space to clear your selection</p>
+<div class="viz-container">
+  <iframe src="ep_sound_comparison_updated.html" style="height: 1350px;"></iframe>
+</div>
 
-  <h3>Sound Feature Analysis - What This Visualization Reveals</h3>
-  <p>This three-panel exploration uncovers the sonic architecture of Elvis Presley's music and how production choices evolved across his career. The valence versus acousticness relationship in the top panel reveals a compelling pattern: Elvis's happiest songs (high valence) span the full acoustic spectrum, from stripped-down acoustic performances to fully produced studio tracks, demonstrating his versatility in conveying positive emotion regardless of instrumentation. However, lower-valence songs cluster toward higher acousticness, suggesting Elvis relied on raw, acoustic arrangements to communicate vulnerability and melancholy—a conscious artistic choice that enhanced emotional authenticity. The tempo distribution illuminates Elvis's rhythmic preferences: by selecting songs across different emotional and acoustic profiles, we discover that his catalog centers around moderate tempos (90-140 BPM), the sweet spot for both dance music and emotional ballads. This tempo range maximizes accessibility and memorability, aligning with psychological research on music preference and processing. The loudness versus duration scatter plot exposes production evolution: earlier recordings show lower loudness values with varied durations, while later studio productions exhibit higher loudness compression regardless of length—reflecting the "loudness wars" trend in music production that prioritized immediate sonic impact. The coordinated interactions reveal that Elvis's most acoustic songs tend toward lower loudness and medium duration, suggesting producer restraint when highlighting vocal performance, while highly produced tracks show consistent loudness optimization. For researchers studying music's mental health applications, this visualization demonstrates how production characteristics (acousticness, loudness) interact with musical content (valence, tempo) to create distinct psychological effects. Selecting high-valence, moderate-tempo songs with balanced production reveals the "feel-good" cluster that research suggests is most effective for mood enhancement and motivation—precisely the combination that made Elvis's music therapeutically valuable for millions of listeners worldwide.</p>
+<h3>Sound Feature Analysis - What This Visualization Reveals</h3>
+<p>This three-panel exploration uncovers the sonic architecture of Elvis Presley's music and how production choices evolved across his career. The valence versus acousticness relationship in the top panel reveals a compelling pattern: Elvis's happiest songs (high valence) span the full acoustic spectrum, from stripped-down acoustic performances to fully produced studio tracks, demonstrating his versatility in conveying positive emotion regardless of instrumentation. However, lower-valence songs cluster toward higher acousticness, suggesting Elvis relied on raw, acoustic arrangements to communicate vulnerability and melancholy—a conscious artistic choice that enhanced emotional authenticity. The tempo distribution illuminates Elvis's rhythmic preferences: by selecting songs across different emotional and acoustic profiles, we discover that his catalog centers around moderate tempos (90-140 BPM), the sweet spot for both dance music and emotional ballads. This tempo range maximizes accessibility and memorability, aligning with psychological research on music preference and processing. The loudness versus duration scatter plot exposes production evolution: earlier recordings show lower loudness values with varied durations, while later studio productions exhibit higher loudness compression regardless of length—reflecting the "loudness wars" trend in music production that prioritized immediate sonic impact. The coordinated interactions reveal that Elvis's most acoustic songs tend toward lower loudness and medium duration, suggesting producer restraint when highlighting vocal performance, while highly produced tracks show consistent loudness optimization. For researchers studying music's mental health applications, this visualization demonstrates how production characteristics (acousticness, loudness) interact with musical content (valence, tempo) to create distinct psychological effects. Selecting high-valence, moderate-tempo songs with balanced production reveals the "feel-good" cluster that research suggests is most effective for mood enhancement and motivation—precisely the combination that made Elvis's music therapeutically valuable for millions of listeners worldwide.</p>
 
-  <h3>Combined Insights from Both Visualizations</h3>
-  <p>Together, these visualizations paint a comprehensive picture of Elvis Presley's musical signature and its psychological impact. The coordinated views reveal that Elvis's most enduring hits occupy a specific sweet spot: moderate-to-high energy, danceable rhythms, positive valence, moderate tempo (100-130 BPM), balanced acousticness, and optimized loudness—all within a 2-3 minute duration. This combination maximizes both immediate emotional impact and long-term memorability, explaining Elvis's sustained popularity and his music's effectiveness in therapeutic contexts. The interactive nature allows users to discover personal insights: selecting songs by one characteristic (like high acousticness) and observing how other features cluster provides understanding of Elvis's artistic consistency and intentional sonic palette. These patterns support broader music psychology research by demonstrating that successful popular music isn't random—it represents careful calibration of multiple sonic and structural elements to achieve specific emotional and physiological responses in listeners. For the mental health applications explored in this project, both visualizations confirm that music's therapeutic potential emerges from the interplay of multiple characteristics rather than any single feature, validating the importance of considering energy, valence, tempo, and production quality when curating playlists for mood regulation, motivation, or emotional well-being.</p>
+<h3>Combined Insights from Both Visualizations</h3>
+<p>Together, these visualizations paint a comprehensive picture of Elvis Presley's musical signature and its psychological impact. The coordinated views reveal that Elvis's most enduring hits occupy a specific sweet spot: moderate-to-high energy, danceable rhythms, positive valence, moderate tempo (100-130 BPM), balanced acousticness, and optimized loudness—all within a 2-3 minute duration. This combination maximizes both immediate emotional impact and long-term memorability, explaining Elvis's sustained popularity and his music's effectiveness in therapeutic contexts. The interactive nature allows users to discover personal insights: selecting songs by one characteristic (like high acousticness) and observing how other features cluster provides understanding of Elvis's artistic consistency and intentional sonic palette. These patterns support broader music psychology research by demonstrating that successful popular music isn't random—it represents careful calibration of multiple sonic and structural elements to achieve specific emotional and physiological responses in listeners. For the mental health applications explored in this project, both visualizations confirm that music's therapeutic potential emerges from the interplay of multiple characteristics rather than any single feature, validating the importance of considering energy, valence, tempo, and production quality when curating playlists for mood regulation, motivation, or emotional well-being.</p>
 
 
-  <script>
-    const genre_dict = {
-      'Rock & Alternative': ['alt-rock', 'alternative', 'grunge', 'hard-rock', 'indie', 'psych-rock', 'punk-rock', 'punk', 'rock', 'rock-n-roll', 'guitar', 'goth', 'emo', 'garage', 'industrial', 'grindcore', 'hardcore'],
-      'Metal': ['black-metal', 'death-metal', 'heavy-metal', 'metal', 'metalcore', 'power-pop'],
-      'Electronic & Dance': ['breakbeat', 'chicago-house', 'club', 'dance', 'deep-house', 'detroit-techno', 'disco', 'drum-and-bass', 'dubstep', 'edm', 'electro', 'electronic', 'hardstyle', 'house', 'idm', 'minimal-techno', 'progressive-house', 'techno', 'trance', 'synth-pop', 'groove'],
-      'Hip-Hop & Urban': ['hip-hop', 'r-n-b', 'soul', 'funk', 'dub', 'trip-hop'],
-      'Pop': ['pop', 'indie-pop', 'pop-film', 'party'],
-      'Country & Folk Americana': ['country', 'folk', 'bluegrass', 'honky-tonk', 'singer-songwriter', 'songwriter', 'acoustic'],
-      'Jazz & Blues': ['jazz', 'blues', 'gospel'],
-      'Latin & Caribbean': ['latin', 'latino', 'reggae', 'reggaeton', 'dancehall', 'salsa', 'samba', 'tango', 'brazil', 'forro', 'pagode'],
-      'Brazilian': ['mpb', 'sertanejo'],
-      'Asian Pop & Regional': ['j-pop', 'j-rock', 'j-dance', 'j-idol', 'k-pop', 'cantopop', 'mandopop', 'indian', 'malay'],
-      'European & Regional': ['french', 'german', 'british', 'swedish', 'turkish', 'iranian', 'spanish'],
-      'Classical & Sophisticated': ['classical', 'opera', 'new-age', 'piano'],
-      'Mood & Ambient': ['ambient', 'chill', 'happy', 'sad', 'sleep', 'study'],
-      'World & Traditional': ['world-music', 'afrobeat', 'ska'],
-      'Specialty & Novelty': ['anime', 'children', 'kids', 'comedy', 'disney', 'show-tunes', 'romance', 'rockabilly']
-    };
+<script>
+  const genre_dict = {
+    'Rock & Alternative': ['alt-rock', 'alternative', 'grunge', 'hard-rock', 'indie', 'psych-rock', 'punk-rock', 'punk', 'rock', 'rock-n-roll', 'guitar', 'goth', 'emo', 'garage', 'industrial', 'grindcore', 'hardcore'],
+    'Metal': ['black-metal', 'death-metal', 'heavy-metal', 'metal', 'metalcore', 'power-pop'],
+    'Electronic & Dance': ['breakbeat', 'chicago-house', 'club', 'dance', 'deep-house', 'detroit-techno', 'disco', 'drum-and-bass', 'dubstep', 'edm', 'electro', 'electronic', 'hardstyle', 'house', 'idm', 'minimal-techno', 'progressive-house', 'techno', 'trance', 'synth-pop', 'groove'],
+    'Hip-Hop & Urban': ['hip-hop', 'r-n-b', 'soul', 'funk', 'dub', 'trip-hop'],
+    'Pop': ['pop', 'indie-pop', 'pop-film', 'party'],
+    'Country & Folk Americana': ['country', 'folk', 'bluegrass', 'honky-tonk', 'singer-songwriter', 'songwriter', 'acoustic'],
+    'Jazz & Blues': ['jazz', 'blues', 'gospel'],
+    'Latin & Caribbean': ['latin', 'latino', 'reggae', 'reggaeton', 'dancehall', 'salsa', 'samba', 'tango', 'brazil', 'forro', 'pagode'],
+    'Brazilian': ['mpb', 'sertanejo'],
+    'Asian Pop & Regional': ['j-pop', 'j-rock', 'j-dance', 'j-idol', 'k-pop', 'cantopop', 'mandopop', 'indian', 'malay'],
+    'European & Regional': ['french', 'german', 'british', 'swedish', 'turkish', 'iranian', 'spanish'],
+    'Classical & Sophisticated': ['classical', 'opera', 'new-age', 'piano'],
+    'Mood & Ambient': ['ambient', 'chill', 'happy', 'sad', 'sleep', 'study'],
+    'World & Traditional': ['world-music', 'afrobeat', 'ska'],
+    'Specialty & Novelty': ['anime', 'children', 'kids', 'comedy', 'disney', 'show-tunes', 'romance', 'rockabilly']
+  };
 
-    const genreToCategory = {};
-    for (const [category, genres] of Object.entries(genre_dict)) {
-      genres.forEach(genre => {
-        genreToCategory[genre] = category;
-      });
-    }
+  const genreToCategory = {};
+  for (const [category, genres] of Object.entries(genre_dict)) {
+    genres.forEach(genre => {
+      genreToCategory[genre] = category;
+    });
+  }
 
-    let allData;
+  let allData;
 
-    d3.csv('dataset.csv').then(function(data) {
-      allData = data;
-      allData.forEach(function(d) {
-        d.energy = +d.energy;
-        d.valence = +d.valence;
-        d.acousticness = +d.acousticness;
-        d.explicit = (d.explicit === 'True' || d.explicit === 'true' || d.explicit === true);
-        d.duration = (+d.duration_ms / 1000) / 60;
-        d.popularity = +d.popularity;
-        d.liveness = +d.liveness;
-      });
-
-      createPopularityChart(data);
-      createEnergyValenceChart(data);
-      createDurationChart(data);
-    }).catch(function(error) {
-      console.error('Error loading the CSV file:', error);
+  d3.csv('dataset.csv').then(function(data) {
+    allData = data;
+    allData.forEach(function(d) {
+      d.energy = +d.energy;
+      d.valence = +d.valence;
+      d.acousticness = +d.acousticness;
+      d.explicit = (d.explicit === 'True' || d.explicit === 'true' || d.explicit === true);
+      d.duration = (+d.duration_ms / 1000) / 60;
+      d.popularity = +d.popularity;
+      d.liveness = +d.liveness;
     });
 
-    function createPopularityChart(data) {
-      const categoryPopularity = {};
-      const categoryCounts = {};
+    createPopularityChart(data);
+    createEnergyValenceChart(data);
+    createDurationChart(data);
+  }).catch(function(error) {
+    console.error('Error loading the CSV file:', error);
+  });
 
-      data.forEach(d => {
-        const genre = d.track_genre;
-        const popularity = +d.popularity;
-        
-        if (!genre || isNaN(popularity)) return;
-        
-        const category = genreToCategory[genre];
-        if (!category) return;
+  function createPopularityChart(data) {
+    const categoryPopularity = {};
+    const categoryCounts = {};
 
-        if (!categoryPopularity[category]) {
-          categoryPopularity[category] = 0;
-          categoryCounts[category] = 0;
-        }
-        
-        categoryPopularity[category] += popularity;
-        categoryCounts[category] += 1;
-      });
+    data.forEach(d => {
+      const genre = d.track_genre;
+      const popularity = +d.popularity;
 
-      const popularityData = [];
-      for (const [category, total] of Object.entries(categoryPopularity)) {
-        popularityData.push({
-          genre_category: category,
-          popularity: total / categoryCounts[category]
-        });
+      if (!genre || isNaN(popularity)) return;
+
+      const category = genreToCategory[genre];
+      if (!category) return;
+
+      if (!categoryPopularity[category]) {
+        categoryPopularity[category] = 0;
+        categoryCounts[category] = 0;
       }
 
-      popularityData.sort((a, b) => b.popularity - a.popularity);
+      categoryPopularity[category] += popularity;
+      categoryCounts[category] += 1;
+    });
 
-      const margin = {top: 60, right: 120, bottom: 60, left: 220};
-      const width = 900 - margin.left - margin.right;
-      const height = 600 - margin.top - margin.bottom;
-
-      const svg = d3.select("#popularity-chart")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
-      const tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip");
-
-      const x = d3.scaleLinear()
-        .domain([0, d3.max(popularityData, d => d.popularity) * 1.1])
-        .range([0, width]);
-
-      const y = d3.scaleBand()
-        .domain(popularityData.map(d => d.genre_category))
-        .range([0, height])
-        .padding(0.2);
-
-      // Color scale removed - using solid green color instead
-
-      svg.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .style("font-size", "12px");
-
-      svg.append("g")
-        .call(d3.axisLeft(y))
-        .selectAll("text")
-        .style("font-size", "12px");
-
-      svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", height + 45)
-        .style("text-anchor", "middle")
-        .style("font-size", "14px")
-        .text("Average Popularity Score");
-
-      svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -height / 2)
-        .attr("y", -180)
-        .style("text-anchor", "middle")
-        .style("font-size", "14px")
-        .text("Genre Category");
-
-      svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", -30)
-        .style("text-anchor", "middle")
-        .style("font-size", "18px")
-        .text("Average Popularity by Genre Category");
-
-      let selectedBar = null;
-
-      const bars = svg.selectAll(".bar")
-        .data(popularityData)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", 0)
-        .attr("y", d => y(d.genre_category))
-        .attr("width", d => x(d.popularity))
-        .attr("height", y.bandwidth())
-        .attr("fill", "#1DB954")
-        .attr("opacity", 1)
-        .on("mouseover", function(event, d) {
-          if (!selectedBar || selectedBar === this) {
-            d3.select(this).attr("opacity", 0.8);
-          }
-          tooltip
-            .style("opacity", 1)
-            .html(`<strong>${d.genre_category}</strong><br/>Popularity: ${d.popularity.toFixed(2)}`)
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", function(event, d) {
-          if (!selectedBar) {
-            d3.select(this).attr("opacity", 1);
-          } else if (selectedBar === this) {
-            d3.select(this).attr("opacity", 1);
-          } else {
-            d3.select(this).attr("opacity", 0.3);
-          }
-          tooltip.style("opacity", 0);
-        })
-        .on("click", function(event, d) {
-          if (selectedBar === this) {
-            selectedBar = null;
-            bars.attr("opacity", 1);
-          } else {
-            selectedBar = this;
-            bars.attr("opacity", 0.3);
-            d3.select(this).attr("opacity", 1);
-          }
-        });
-
-      svg.selectAll(".label")
-        .data(popularityData)
-        .enter()
-        .append("text")
-        .attr("class", "label")
-        .attr("x", d => x(d.popularity) + 5)
-        .attr("y", d => y(d.genre_category) + y.bandwidth() / 2)
-        .attr("dy", "0.35em")
-        .style("font-size", "11px")
-        .style("fill", "#333")
-        .text(d => d.popularity.toFixed(1));
-
-      const legendWidth = 20;
-      const legendHeight = 200;
-      
-      const legendScale = d3.scaleLinear()
-        .domain([0, d3.max(popularityData, d => d.popularity)])
-        .range([legendHeight, 0]);
-
-      const legendAxis = d3.axisRight(legendScale)
-        .ticks(5)
-        .tickFormat(d => d.toFixed(0));
-
-      const legend = svg.append("g")
-        .attr("transform", `translate(${width + 20}, ${(height - legendHeight) / 2})`);
-
-      const defs = svg.append("defs");
-      const gradient = defs.append("linearGradient")
-        .attr("id", "legend-gradient")
-        .attr("x1", "0%")
-        .attr("y1", "100%")
-        .attr("x2", "0%")
-        .attr("y2", "0%");
-
-      gradient.selectAll("stop")
-        .data(d3.range(0, 1.1, 0.1))
-        .enter()
-        .append("stop")
-        .attr("offset", d => (d * 100) + "%")
-        .attr("stop-color", d => colorScale(d * d3.max(popularityData, datum => datum.popularity)));
-
-      legend.append("rect")
-        .attr("width", legendWidth)
-        .attr("height", legendHeight)
-        .style("fill", "url(#legend-gradient)");
-
-      legend.append("g")
-        .attr("transform", `translate(${legendWidth}, 0)`)
-        .call(legendAxis);
-
-      legend.append("text")
-        .attr("transform", `translate(${legendWidth / 2}, ${-10})`)
-        .style("text-anchor", "middle")
-        .style("font-size", "12px")
-        .text("Popularity");
+    const popularityData = [];
+    for (const [category, total] of Object.entries(categoryPopularity)) {
+      popularityData.push({
+        genre_category: category,
+        popularity: total / categoryCounts[category]
+      });
     }
 
-    function createEnergyValenceChart(data) {
+    popularityData.sort((a, b) => b.popularity - a.popularity);
+
+    const margin = {top: 60, right: 120, bottom: 60, left: 220};
+    const width = 900 - margin.left - margin.right;
+    const height = 600 - margin.top - margin.bottom;
+
+    const svg = d3.select("#popularity-chart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const tooltip = d3.select("body")
+      .append("div")
+      .attr("class", "tooltip");
+
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(popularityData, d => d.popularity) * 1.1])
+      .range([0, width]);
+
+    const y = d3.scaleBand()
+      .domain(popularityData.map(d => d.genre_category))
+      .range([0, height])
+      .padding(0.2);
+
+    // Color scale removed - using solid green color instead
+
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .style("font-size", "12px");
+
+    svg.append("g")
+      .call(d3.axisLeft(y))
+      .selectAll("text")
+      .style("font-size", "12px");
+
+    svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", height + 45)
+      .style("text-anchor", "middle")
+      .style("font-size", "14px")
+      .text("Average Popularity Score");
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -height / 2)
+      .attr("y", -180)
+      .style("text-anchor", "middle")
+      .style("font-size", "14px")
+      .text("Genre Category");
+
+    svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", -30)
+      .style("text-anchor", "middle")
+      .style("font-size", "18px")
+      .text("Average Popularity by Genre Category");
+
+    let selectedBar = null;
+
+    const bars = svg.selectAll(".bar")
+      .data(popularityData)
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", 0)
+      .attr("y", d => y(d.genre_category))
+      .attr("width", d => x(d.popularity))
+      .attr("height", y.bandwidth())
+      .attr("fill", "#1DB954")
+      .attr("opacity", 1)
+      .on("mouseover", function(event, d) {
+        if (!selectedBar || selectedBar === this) {
+          d3.select(this).attr("opacity", 0.8);
+        }
+        tooltip
+          .style("opacity", 1)
+          .html(`<strong>${d.genre_category}</strong><br/>Popularity: ${d.popularity.toFixed(2)}`)
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(event, d) {
+        if (!selectedBar) {
+          d3.select(this).attr("opacity", 1);
+        } else if (selectedBar === this) {
+          d3.select(this).attr("opacity", 1);
+        } else {
+          d3.select(this).attr("opacity", 0.3);
+        }
+        tooltip.style("opacity", 0);
+      })
+      .on("click", function(event, d) {
+        if (selectedBar === this) {
+          selectedBar = null;
+          bars.attr("opacity", 1);
+        } else {
+          selectedBar = this;
+          bars.attr("opacity", 0.3);
+          d3.select(this).attr("opacity", 1);
+        }
+      });
+
+    svg.selectAll(".label")
+      .data(popularityData)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("x", d => x(d.popularity) + 5)
+      .attr("y", d => y(d.genre_category) + y.bandwidth() / 2)
+      .attr("dy", "0.35em")
+      .style("font-size", "11px")
+      .style("fill", "#333")
+      .text(d => d.popularity.toFixed(1));
+
+    const legendWidth = 20;
+    const legendHeight = 200;
+
+    const legendScale = d3.scaleLinear()
+      .domain([0, d3.max(popularityData, d => d.popularity)])
+      .range([legendHeight, 0]);
+
+    const legendAxis = d3.axisRight(legendScale)
+      .ticks(5)
+      .tickFormat(d => d.toFixed(0));
+
+    const legend = svg.append("g")
+      .attr("transform", `translate(${width + 20}, ${(height - legendHeight) / 2})`);
+
+    const defs = svg.append("defs");
+    const gradient = defs.append("linearGradient")
+      .attr("id", "legend-gradient")
+      .attr("x1", "0%")
+      .attr("y1", "100%")
+      .attr("x2", "0%")
+      .attr("y2", "0%");
+
+    gradient.selectAll("stop")
+      .data(d3.range(0, 1.1, 0.1))
+      .enter()
+      .append("stop")
+      .attr("offset", d => (d * 100) + "%")
+      .attr("stop-color", d => colorScale(d * d3.max(popularityData, datum => datum.popularity)));
+
+    legend.append("rect")
+      .attr("width", legendWidth)
+      .attr("height", legendHeight)
+      .style("fill", "url(#legend-gradient)");
+
+    legend.append("g")
+      .attr("transform", `translate(${legendWidth}, 0)`)
+      .call(legendAxis);
+
+    legend.append("text")
+      .attr("transform", `translate(${legendWidth / 2}, ${-10})`)
+      .style("text-anchor", "middle")
+      .style("font-size", "12px")
+      .text("Popularity");
+  }
+
+  function createEnergyValenceChart(data) {
     const select = document.getElementById('genreSelect');
 
     Object.keys(genre_dict).forEach(genre => {
@@ -558,9 +558,9 @@
       svg.append("text").attr("x", width - margin.right - 10).attr("y", margin.top + 20).attr("text-anchor", "end").text(`Line of Best Fit: y = ${regression.slope.toFixed(2)}x + ${regression.intercept.toFixed(2)}`).style("fill", "#ffffff").style("font-size", "14px");
     }
   }
-  </script>
+</script>
 
-  <hr>
+<hr>
 
 <h2>Conclusion</h2>
 <p>Music is a key factor in combatting the mental health crisis, and is an incredibly important tool in boosting mood and motivation and encouraging physical activity. Through our visualizations, we hope to better educate our page's users on the many different facets of musical composition, performance, and popularity that influence listeners' mental health. We hope to allow people to better understand music and better implement that music in improving their daily lives. In the future, we would further expand on our project by finding and analyzing data from experiments that specifically apply music as a treatment for specific mental diagnoses. We would also examine music's effect on physical attributes, such as heart rate and adrenaline levels.</p>
