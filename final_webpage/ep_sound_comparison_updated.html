@@ -81,10 +81,6 @@
           "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
           "background": "#121212",
           "data": {"values": elvisData},
-          "params": [{
-            "name": "brush",
-            "select": {"type": "interval", "encodings": ["x", "y"]}
-          }],
           "vconcat": [
             {
               "title": {
@@ -95,6 +91,10 @@
               },
               "width": 600,
               "height": 400,
+              "params": [{
+                "name": "brush",
+                "select": {"type": "interval", "encodings": ["x", "y"]}
+              }],
               "layer": [
                 {
                   "params": [{
@@ -301,6 +301,11 @@
               ]
             }
           ],
+          "resolve": {
+            "scale": {
+              "color": "independent"
+            }
+          },
           "config": {
             "background": "#121212",
             "view": {
