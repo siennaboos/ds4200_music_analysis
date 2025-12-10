@@ -375,182 +375,189 @@
     }
 
     function createEnergyValenceChart(data) {
-      const select = document.getElementById('genreSelect');
+        const select = document.getElementById('genreSelect');
 
-      Object.keys(genre_dict).forEach(genre => {
-        const option = document.createElement('option');
-        option.value = genre;
-        option.textContent = genre;
-        select.appendChild(option);
+    Object.keys(genre_dict).forEach(genre => {
+      const option = document.createElement('option');
+      option.value = genre;
+      option.textContent = genre;
+      select.appendChild(option);
+    });
+
+    select.value = 'Hip-Hop & Urban';
+
+    updateChart('Hip-Hop & Urban');
+
+    select.addEventListener('change', function() {
+      updateChart(this.value);
+    });
+
+    function updateChart(selectedGenre) {
+      d3.select('#chart').selectAll('*').remove();
+
+      const genreList = genre_dict[selectedGenre];
+      const filteredData = data.filter(d => genreList.includes(d.track_genre));
+
+      if (filteredData.length === 0) {
+        d3.select('#chart').append('p').text('No data available for this genre category');
+        return;
+      }
+
+      const cleanData = filteredData.filter(d => !d.explicit);
+      const explicitData = filteredData.filter(d => d.explicit);
+
+      const width = 900;
+      const height = 600;
+      const margin = { top: 60, bottom: 60, left: 60, right: 60 };
+
+      const svg = d3.select('#chart').append('svg').attr('width', width).attr('height', height);
+
+      const xScale = d3.scaleLinear().domain([0, 1]).range([margin.left, width - margin.right]);
+      const yScale = d3.scaleLinear().domain([0, 1]).range([height - margin.bottom, margin.top]);
+
+      // Grid lines
+      svg.append('g').attr('class', 'grid').attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(xScale).tickSize(-height + margin.top + margin.bottom).tickFormat(''));
+      svg.append('g').attr('class', 'grid').attr('transform', `translate(${margin.left}, 0)`).call(d3.axisLeft(yScale).tickSize(-width + margin.left + margin.right).tickFormat(''));
+
+      // Axes with lighter color for visibility on black background
+      svg.append('g').call(d3.axisBottom(xScale)).attr('transform', `translate(0, ${height - margin.bottom})`).selectAll('text').style('fill', '#ffffff');
+      svg.selectAll('.domain, .tick line').style('stroke', '#666666');
+
+      svg.append('g').call(d3.axisLeft(yScale)).attr('transform', `translate(${margin.left}, 0)`).selectAll('text').style('fill', '#ffffff');
+      svg.selectAll('.domain, .tick line').style('stroke', '#666666');
+
+      // Axis labels
+      svg.append('text').attr('x', width / 2).attr('y', height - 15).text('Energy').style('text-anchor', 'middle').style('font-size', '14px').style('fill', '#ffffff');
+      svg.append('text').attr('x', 0 - height / 2).attr('y', 15).text('Valence').style('text-anchor', 'middle').attr('transform', 'rotate(-90)').style('font-size', '14px').style('fill', '#ffffff');
+
+      // Add title with background
+      const titleText = `Energy vs Valence: ${selectedGenre}`;
+      const titleGroup = svg.append('g');
+      const textElement = titleGroup.append('text').attr('x', width / 2).attr('y', 30).text(titleText).style('text-anchor', 'middle').style('font-size', '18px').style('font-weight', 'bold').style('fill', '#1DB954');
+
+      // Get bounding box and add background
+      const bbox = textElement.node().getBBox();
+      titleGroup.insert('rect', 'text').attr('x', bbox.x - 10).attr('y', bbox.y - 5).attr('width', bbox.width + 20).attr('height', bbox.height + 10).attr('fill', '#181818').attr('rx', 5).attr('opacity', 0.95);
+
+      // Data points - clean (non-explicit) in light green, explicit in hunter green
+      svg.append('g').selectAll("circle").data(cleanData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#90EE90").style("opacity", 0.5).style("stroke", "white").style("stroke-width", 0.4);
+
+      svg.append('g').selectAll("circle").data(explicitData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#355E3B").style("opacity", 0.5).style("stroke", "white").style("stroke-width", 0.4);
+
+      // Explicitness Legend
+      const explicitLegend = svg.append('g').attr('transform', `translate(${margin.left + 10}, ${margin.top + 10})`);
+      explicitLegend.append('rect').attr('class', 'legend-box').attr('x', 0).attr('y', 0).attr('width', 140).attr('height', 70).attr('fill', '#2a2a2a').attr('stroke', '#666').attr('rx', 4);
+      explicitLegend.append('text').attr('x', 10).attr('y', 20).text('Explicitness').style('font-weight', 'bold').style('font-size', '12px').style('fill', '#ffffff');
+      explicitLegend.append('circle').attr('cx', 20).attr('cy', 38).attr('r', 6).style('fill', '#90EE90').style('opacity', 0.7).style('stroke', 'white');
+      explicitLegend.append('text').attr('x', 32).attr('y', 42).text('Non-Explicit').style('font-size', '11px').style('fill', '#cccccc');
+      explicitLegend.append('circle').attr('cx', 20).attr('cy', 58).attr('r', 6).style('fill', '#355E3B').style('opacity', 0.7).style('stroke', 'white');
+      explicitLegend.append('text').attr('x', 32).attr('y', 62).text('Explicit').style('font-size', '11px').style('fill', '#cccccc');
+
+      // Acousticness Legend
+      const acousticLegend = svg.append('g').attr('transform', `translate(${width - margin.right - 150}, ${margin.top + 10})`);
+      acousticLegend.append('rect').attr('class', 'legend-box').attr('x', 0).attr('y', 0).attr('width', 140).attr('height', 110).attr('fill', '#2a2a2a').attr('stroke', '#666').attr('rx', 4);
+      acousticLegend.append('text').attr('x', 10).attr('y', 20).text('Acousticness').style('font-weight', 'bold').style('font-size', '12px').style('fill', '#ffffff');
+
+      const acousticSizes = [
+        { value: 0.1, label: 'Low (0.1)' },
+        { value: 0.3, label: 'Medium (0.3)' },
+        { value: 0.5, label: 'High (0.5)' }
+      ];
+
+      acousticSizes.forEach((item, i) => {
+        const yPos = 38 + i * 25;
+        const radius = 3 + (item.value * 8);
+        acousticLegend.append('circle').attr('cx', 20).attr('cy', yPos).attr('r', radius).style('fill', '#355E3B').style('opacity', 0.7).style('stroke', 'white');
+        acousticLegend.append('text').attr('x', 40).attr('y', yPos + 4).text(item.label).style('font-size', '11px').style('fill', '#cccccc');
       });
+    }
+  }
 
-      select.value = 'Hip-Hop & Urban';
+  function createDurationChart(data) {
+    const select = document.getElementById('genreSelect2');
 
-      updateChart('Hip-Hop & Urban');
+    Object.keys(genre_dict).forEach(genre => {
+      const option = document.createElement('option');
+      option.value = genre;
+      option.textContent = genre;
+      select.appendChild(option);
+    });
 
-      select.addEventListener('change', function() {
-        updateChart(this.value);
-      });
+    select.value = 'Hip-Hop & Urban';
 
-      function updateChart(selectedGenre) {
-        d3.select('#chart').selectAll('*').remove();
+    updateChart2('Hip-Hop & Urban');
 
-        const genreList = genre_dict[selectedGenre];
-        const filteredData = allData.filter(d => genreList.includes(d.track_genre));
+    select.addEventListener('change', function() {
+      updateChart2(this.value);
+    });
 
-        if (filteredData.length === 0) {
-          d3.select('#chart').append('p').text('No data available for this genre category');
-          return;
-        }
+    function updateChart2(selectedGenre) {
+      d3.select('#chart2').selectAll('*').remove();
 
-        const cleanData = filteredData.filter(d => !d.explicit);
-        const explicitData = filteredData.filter(d => d.explicit);
+      const genreList = genre_dict[selectedGenre];
+      const filteredData = data.filter(d => genreList.includes(d.track_genre)); // Fixed: changed allData to data
 
-        const width = 900;
-        const height = 600;
-        const margin = { top: 60, bottom: 60, left: 60, right: 60 };
+      if (filteredData.length === 0) {
+        d3.select('#chart2').append('p').text('No data available for this genre category').style('color', '#ffffff');
+        return;
+      }
 
-        const svg = d3.select('#chart').append('svg').attr('width', width).attr('height', height);
+      const width = 800;
+      const height = 600;
+      const margin = { top: 50, bottom: 50, left: 50, right: 50 };
 
-        const xScale = d3.scaleLinear().domain([0, 1]).range([margin.left, width - margin.right]);
-        const yScale = d3.scaleLinear().domain([0, 1]).range([height - margin.bottom, margin.top]);
+      const svg = d3.select('#chart2').append('svg').attr('width', width).attr('height', height);
 
-        svg.append('g').attr('class', 'grid').attr('transform', `translate(0, ${height - margin.bottom})`).call(d3.axisBottom(xScale).tickSize(-height + margin.top + margin.bottom).tickFormat(''));
-        svg.append('g').attr('class', 'grid').attr('transform', `translate(${margin.left}, 0)`).call(d3.axisLeft(yScale).tickSize(-width + margin.left + margin.right).tickFormat(''));
-        svg.append('g').call(d3.axisBottom(xScale)).attr('transform', `translate(0, ${height - margin.bottom})`);
-        svg.append('g').call(d3.axisLeft(yScale)).attr('transform', `translate(${margin.left}, 0)`);
-        svg.append('text').attr('x', width / 2).attr('y', height - 15).text('Energy').style('text-anchor', 'middle').style('font-size', '14px');
-        svg.append('text').attr('x', 0 - height / 2).attr('y', 15).text('Valence').style('text-anchor', 'middle').attr('transform', 'rotate(-90)').style('font-size', '14px');
-        
-        // Add title with background
-        const titleText = `Energy vs Valence: ${selectedGenre}`;
-        const titleGroup = svg.append('g');
-        const textElement = titleGroup.append('text').attr('x', width / 2).attr('y', 30).text(titleText).style('text-anchor', 'middle').style('font-size', '18px').style('font-weight', 'bold').style('fill', '#1DB954');
-        
-        // Get bounding box and add background
-        const bbox = textElement.node().getBBox();
-        titleGroup.insert('rect', 'text').attr('x', bbox.x - 10).attr('y', bbox.y - 5).attr('width', bbox.width + 20).attr('height', bbox.height + 10).attr('fill', '#181818').attr('rx', 5).attr('opacity', 0.95);
+      const xScale = d3.scaleLinear().domain([0, d3.max(filteredData, d => d.duration) * 1.1]).range([margin.left, width - margin.right]);
+      const yScale = d3.scaleLinear().domain([0, d3.max(filteredData, d => d.popularity) * 1.1]).range([height - margin.bottom, margin.top]);
 
+      // Axes with white text
+      svg.append('g').call(d3.axisBottom().scale(xScale)).attr('transform', `translate(0, ${height - margin.bottom})`).selectAll('text').style('fill', '#ffffff');
+      svg.selectAll('.domain, .tick line').style('stroke', '#666666');
 
-        svg.append('g').selectAll("circle").data(cleanData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "navy").style("opacity", 0.6).style("stroke", "white").style("stroke-width", 0.5);
-        svg.append('g').selectAll("circle").data(explicitData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "purple").style("opacity", 0.6).style("stroke", "white").style("stroke-width", 0.5);
+      svg.append('g').call(d3.axisLeft().scale(yScale)).attr('transform', `translate(${margin.left}, 0)`).selectAll('text').style('fill', '#ffffff');
+      svg.selectAll('.domain, .tick line').style('stroke', '#666666');
 
-        const explicitLegend = svg.append('g').attr('transform', `translate(${margin.left + 10}, ${margin.top + 10})`);
-        explicitLegend.append('rect').attr('class', 'legend-box').attr('x', 0).attr('y', 0).attr('width', 140).attr('height', 70).attr('fill', 'white').attr('stroke', '#ccc').attr('rx', 4);
-        explicitLegend.append('text').attr('x', 10).attr('y', 20).text('Explicitness').style('font-weight', 'bold').style('font-size', '12px').style('fill', '#333');
-        explicitLegend.append('circle').attr('cx', 20).attr('cy', 38).attr('r', 6).style('fill', 'navy').style('opacity', 0.6).style('stroke', 'white');
-        explicitLegend.append('text').attr('x', 32).attr('y', 42).text('Non-Explicit').style('font-size', '11px').style('fill', '#555');
-        explicitLegend.append('circle').attr('cx', 20).attr('cy', 58).attr('r', 6).style('fill', 'purple').style('opacity', 0.6).style('stroke', 'white');
-        explicitLegend.append('text').attr('x', 32).attr('y', 62).text('Explicit').style('font-size', '11px').style('fill', '#555');
+      // Axis labels in white
+      svg.append('text').attr('x', width / 2).attr('y', height - 15).text('Duration (minutes)').style('text-anchor', 'middle').style('fill', '#ffffff');
+      svg.append('text').attr('x', 0 - height / 2).attr('y', 15).text('Popularity').style('text-anchor', 'middle').attr('transform', 'rotate(-90)').style('fill', '#ffffff');
 
-        const acousticLegend = svg.append('g').attr('transform', `translate(${width - margin.right - 150}, ${margin.top + 10})`);
-        acousticLegend.append('rect').attr('class', 'legend-box').attr('x', 0).attr('y', 0).attr('width', 140).attr('height', 110).attr('fill', 'white').attr('stroke', '#ccc').attr('rx', 4);
-        acousticLegend.append('text').attr('x', 10).attr('y', 20).text('Acousticness').style('font-weight', 'bold').style('font-size', '12px').style('fill', '#333');
+      // Title in medium gray
+      svg.append('text').attr('x', width / 2).attr('y', 30).text(`Duration vs. Popularity: ${selectedGenre}`).style('text-anchor', 'middle').style('font-size', '20px').style('fill', '#1DB954')
+      // Data points in hunter green
+      svg.append('g').selectAll("circle").data(filteredData).enter().append("circle").attr("cx", d => xScale(d.duration)).attr("cy", d => yScale(d.popularity)).attr("r", 2).style("fill", "#355E3B").style("fill-opacity", 0.7);
 
-        const acousticSizes = [
-          { value: 0.1, label: 'Low (0.1)' },
-          { value: 0.3, label: 'Medium (0.3)' },
-          { value: 0.5, label: 'High (0.5)' }
-        ];
-
-        acousticSizes.forEach((item, i) => {
-          const yPos = 38 + i * 25;
-          const radius = 3 + (item.value * 8);
-          acousticLegend.append('circle').attr('cx', 20).attr('cy', yPos).attr('r', radius).style('fill', 'purple').style('opacity', 0.6).style('stroke', 'white');
-          acousticLegend.append('text').attr('x', 40).attr('y', yPos + 4).text(item.label).style('font-size', '11px').style('fill', '#555');
+      function linearRegression(data) {
+        const n = data.length;
+        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+        data.forEach(d => {
+          sumX += d.duration;
+          sumY += d.popularity;
+          sumXY += d.duration * d.popularity;
+          sumX2 += d.duration * d.duration;
         });
+        const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+        const intercept = (sumY - slope * sumX) / n;
+        return { slope, intercept };
       }
+
+      const regression = linearRegression(filteredData);
+      const xMin = 0;
+      const xMax = d3.max(filteredData, d => d.duration);
+      const lineData = [
+        { duration: xMin, popularity: regression.slope * xMin + regression.intercept },
+        { duration: xMax, popularity: regression.slope * xMax + regression.intercept }
+      ];
+
+      const getLine = d3.line().x(d => xScale(d.duration)).y(d => yScale(d.popularity));
+
+      // Line of best fit in green
+      svg.append("path").attr("d", getLine(lineData)).attr("fill", "none").attr("stroke", "#00A36C").attr("stroke-width", 2).attr("opacity", 0.8);
+
+      // Regression equation text in white
+      svg.append("text").attr("x", width - margin.right - 10).attr("y", margin.top + 20).attr("text-anchor", "end").text(`Line of Best Fit: y = ${regression.slope.toFixed(2)}x + ${regression.intercept.toFixed(2)}`).style("fill", "#ffffff").style("font-size", "14px");
     }
-
-    function createDurationChart(data) {
-      const select = document.getElementById('genreSelect2');
-
-      Object.keys(genre_dict).forEach(genre => {
-        const option = document.createElement('option');
-        option.value = genre;
-        option.textContent = genre;
-        select.appendChild(option);
-      });
-
-      select.value = 'Hip-Hop & Urban';
-
-      updateChart2('Hip-Hop & Urban');
-
-      select.addEventListener('change', function() {
-        updateChart2(this.value);
-      });
-
-      function updateChart2(selectedGenre) {
-        d3.select('#chart2').selectAll('*').remove();
-
-        const genreList = genre_dict[selectedGenre];
-        const filteredData = allData.filter(d => genreList.includes(d.track_genre) && d.duration <= 10);
-
-        if (filteredData.length === 0) {
-          d3.select('#chart2').append('p').text('No data available for this genre category').style('color', '#ffffff');
-          return;
-        }
-
-        const width = 800;
-        const height = 600;
-        const margin = { top: 50, bottom: 50, left: 50, right: 50 };
-
-        const svg = d3.select('#chart2').append('svg').attr('width', width).attr('height', height).style('background', '#121212');
-
-        const xScale = d3.scaleLinear().domain([0, d3.max(filteredData, d => d.duration) * 1.1]).range([margin.left, width - margin.right]);
-        const yScale = d3.scaleLinear().domain([0, d3.max(filteredData, d => d.popularity) * 1.1]).range([height - margin.bottom, margin.top]);
-
-        svg.append('g').call(d3.axisBottom().scale(xScale)).attr('transform', `translate(0, ${height - margin.bottom})`).selectAll('text').style('fill', '#ffffff');
-        svg.selectAll('.domain').style('stroke', '#ffffff');
-        svg.selectAll('.tick line').style('stroke', '#ffffff');
-        
-        svg.append('g').call(d3.axisLeft().scale(yScale)).attr('transform', `translate(${margin.left}, 0)`).selectAll('text').style('fill', '#ffffff');
-        svg.selectAll('.domain').style('stroke', '#ffffff');
-        svg.selectAll('.tick line').style('stroke', '#ffffff');
-        
-        svg.append('text').attr('x', width / 2).attr('y', height - 15).text('Duration (minutes)').style('text-anchor', 'middle').style('fill', '#ffffff');
-        svg.append('text').attr('x', 0 - height / 2).attr('y', 15).text('Popularity').style('text-anchor', 'middle').attr('transform', 'rotate(-90)').style('fill', '#ffffff');
-        
-        // Add title with background
-        const titleText = `Duration vs. Popularity: ${selectedGenre}`;
-        const titleGroup = svg.append('g');
-        const textElement = titleGroup.append('text').attr('x', width / 2).attr('y', 30).text(titleText).style('text-anchor', 'middle').style('font-size', '20px').style('font-weight', 'bold').style('fill', '#1DB954');
-        
-        // Get bounding box and add background
-        const bbox = textElement.node().getBBox();
-        titleGroup.insert('rect', 'text').attr('x', bbox.x - 10).attr('y', bbox.y - 5).attr('width', bbox.width + 20).attr('height', bbox.height + 10).attr('fill', '#181818').attr('rx', 5).attr('opacity', 0.95);
-
-
-        svg.append('g').selectAll("circle").data(filteredData).enter().append("circle").attr("cx", d => xScale(d.duration)).attr("cy", d => yScale(d.popularity)).attr("r", 2).style("fill", "#69b3a2").style("fill-opacity", 0.6);
-
-        function linearRegression(data) {
-          const n = data.length;
-          let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-          data.forEach(d => {
-            sumX += d.duration;
-            sumY += d.popularity;
-            sumXY += d.duration * d.popularity;
-            sumX2 += d.duration * d.duration;
-          });
-          const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-          const intercept = (sumY - slope * sumX) / n;
-          return { slope, intercept };
-        }
-
-        const regression = linearRegression(filteredData);
-        const xMin = 0;
-        const xMax = d3.max(filteredData, d => d.duration);
-        const lineData = [
-          { duration: xMin, popularity: regression.slope * xMin + regression.intercept },
-          { duration: xMax, popularity: regression.slope * xMax + regression.intercept }
-        ];
-
-        const getLine = d3.line().x(d => xScale(d.duration)).y(d => yScale(d.popularity));
-
-        svg.append("path").attr("d", getLine(lineData)).attr("fill", "none").attr("stroke", "#3a917d").attr("stroke-width", 1).attr("opacity", 0.7);
-        svg.append("text").attr("x", width - margin.right - 10).attr("y", margin.top + 20).attr("text-anchor", "end").text(`Line of Best Fit: y = ${regression.slope.toFixed(2)}x + ${regression.intercept.toFixed(2)}`).style("fill", "#ffffff").style("font-size", "14px");
-      }
-    }
+  }
   </script>
 
   <hr>
