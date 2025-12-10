@@ -215,17 +215,31 @@
             "select": {"type": "point", "fields": ["genre_category"]}
           }],
           "config": {
+            "background": "#121212",
             "view": {
-              "stroke": "transparent"
+              "stroke": "transparent",
+              "fill": "#121212"
             },
             "axis": {
               "grid": true,
               "gridColor": "#282828"
+            },
+            "legend": {
+              "fillColor": "#121212",
+              "strokeColor": "#282828",
+              "titleColor": "#ffffff",
+              "labelColor": "#ffffff"
             }
           }
         };
 
-        vegaEmbed('#vis', spec, {actions: false});
+        vegaEmbed('#vis', spec, {
+          actions: false,
+          theme: 'dark',
+          config: {
+            background: '#121212'
+          }
+        });
       })
       .catch(error => {
         console.error('Error loading data:', error);
