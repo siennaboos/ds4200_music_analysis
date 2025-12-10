@@ -95,7 +95,7 @@
                 {
                   "params": [{
                     "name": "click",
-                    "select": {"type": "point", "on": "click", "fields": ["track_name"], "clear": "dblclick"}
+                    "select": {"type": "point", "on": "click", "fields": ["track_name", "acousticness", "valence"], "clear": "dblclick"}
                   }],
                   "mark": {"type": "circle", "size": 90, "opacity": 0.7},
                   "encoding": {
@@ -147,7 +147,9 @@
                   }
                 },
                 {
-                  "transform": [{"filter": {"param": "click"}}],
+                  "transform": [
+                    {"filter": {"param": "click"}}
+                  ],
                   "mark": {
                     "type": "text",
                     "align": "left",
@@ -160,7 +162,14 @@
                   "encoding": {
                     "x": {"field": "acousticness", "type": "quantitative"},
                     "y": {"field": "valence", "type": "quantitative"},
-                    "text": {"field": "track_name", "type": "nominal"}
+                    "text": {
+                      "condition": {
+                        "param": "click",
+                        "field": "track_name",
+                        "type": "nominal"
+                      },
+                      "value": ""
+                    }
                   }
                 }
               ]
@@ -213,7 +222,7 @@
                 {
                   "params": [{
                     "name": "click2",
-                    "select": {"type": "point", "on": "click", "fields": ["track_name"], "clear": "dblclick"}
+                    "select": {"type": "point", "on": "click", "fields": ["track_name", "duration_min", "loudness"], "clear": "dblclick"}
                   }],
                   "mark": {"type": "circle", "size": 90, "opacity": 0.7, "color": "#4CBB17"},
                   "encoding": {
@@ -248,7 +257,9 @@
                   }
                 },
                 {
-                  "transform": [{"filter": {"param": "click2"}}],
+                  "transform": [
+                    {"filter": {"param": "click2"}}
+                  ],
                   "mark": {
                     "type": "text",
                     "align": "left",
@@ -261,7 +272,14 @@
                   "encoding": {
                     "x": {"field": "duration_min", "type": "quantitative"},
                     "y": {"field": "loudness", "type": "quantitative"},
-                    "text": {"field": "track_name", "type": "nominal"}
+                    "text": {
+                      "condition": {
+                        "param": "click2",
+                        "field": "track_name",
+                        "type": "nominal"
+                      },
+                      "value": ""
+                    }
                   }
                 }
               ]
