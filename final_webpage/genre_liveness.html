@@ -4,32 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Average Liveness by Genre Category</title>
-  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     body {
       font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #121212;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-    }
-    #vis {
-      background: #121212;
+      margin: 0;
+      background-color: #121212;
       padding: 20px;
+    }
+    .container {
+      background: #121212;
+      padding: 30px;
       border-radius: 8px;
-      display: inline-block;
+      max-width: 1200px;
+      width: 100%;
+    }
+    canvas {
+      max-width: 100%;
     }
   </style>
 </head>
 <body>
-  <div id="vis"></div>
+  <div class="container">
+    <canvas id="livenessChart"></canvas>
+  </div>
 
-  <script type="text/javascript">
+  <script>
     const genre_dict = {
       'Rock & Alternative': [
         'alt-rock', 'alternative', 'grunge', 'hard-rock', 'indie',
@@ -132,118 +136,120 @@
           categoryCounts[category] += 1;
         }
 
-        // Create data array
-        const data = [];
+        // Create data arrays
+        const categories = [];
+        const avgLiveness = [];
+        
         for (const [category, total] of Object.entries(categoryData)) {
-          data.push({
-            genre_category: category,
-            liveness: total / categoryCounts[category]
-          });
+          categories.push(category);
+          avgLiveness.push(total / categoryCounts[category]);
         }
 
         // Sort by liveness descending
-        data.sort((a, b) => b.liveness - a.liveness);
+        const sortedData = categories.map((cat, i) => ({
+          category: cat,
+          liveness: avgLiveness[i]
+        })).sort((a, b) => b.liveness - a.liveness);
 
-        // Create Vega-Lite specification
-        const spec = {
-          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-          "data": {"values": data},
-          "width": 800,
-          "height": 500,
-          "background": "#121212",
-          "title": {
-            "text": "Average Liveness by Genre Category (Click to Highlight)",
-            "color": "#ffffff",
-            "fontSize": 18,
-            "font": "Circular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
-            "fontWeight": 700
+        const sortedCategories = sortedData.map(d => d.category);
+        const sortedLiveness = sortedData.map(d => d.liveness);
+
+        // Generate green colors from light to dark based on value
+        const greenColors = sortedLiveness.map(value => {
+          // Normalize value between 0 and 1
+          const normalized = (value - Math.min(...sortedLiveness)) / 
+                           (Math.max(...sortedLiveness) - Math.min(...sortedLiveness));
+          
+          // Green gradient from light to dark
+          const greens = [
+            '#90EE90', // Light Green
+            '#4CBB17', // Kelly Green
+            '#32CD32', // Lime Green
+            '#2AAA8A', // Jungle Green
+            '#00A36C', // Jade
+            '#355E3B', // Hunter Green
+            '#008000'  // Green
+          ];
+          
+          // Pick color based on normalized value
+          const index = Math.floor(normalized * (greens.length - 1));
+          return greens[index];
+        });
+
+        // Create chart
+        const ctx = document.getElementById('livenessChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: sortedCategories,
+            datasets: [{
+              label: 'Average Liveness',
+              data: sortedLiveness,
+              backgroundColor: greenColors,
+              borderColor: greenColors,
+              borderWidth: 1
+            }]
           },
-          "mark": "bar",
-          "encoding": {
-            "x": {
-              "field": "liveness",
-              "type": "quantitative",
-              "title": "Average Liveness Score",
-              "scale": {"domain": [0, 0.45]},
-              "axis": {
-                "titleColor": "#ffffff",
-                "labelColor": "#b3b3b3",
-                "gridColor": "#282828",
-                "domainColor": "#282828"
-              }
-            },
-            "y": {
-              "field": "genre_category",
-              "type": "nominal",
-              "title": "Genre Category",
-              "sort": "-x",
-              "axis": {
-                "titleColor": "#ffffff",
-                "labelColor": "#b3b3b3",
-                "gridColor": "#282828",
-                "domainColor": "#282828"
-              }
-            },
-            "color": {
-              "condition": {
-                "param": "select",
-                "field": "liveness",
-                "type": "quantitative",
-                "scale": {
-                  "range": ["#90EE90", "#4CBB17", "#32CD32", "#2AAA8A", "#00A36C", "#355E3B", "#008000"]
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              title: {
+                display: true,
+                text: 'Average Liveness by Genre Category',
+                font: {
+                  size: 18,
+                  weight: '700'
                 },
-                "legend": {
-                  "title": "Liveness",
-                  "titleColor": "#ffffff",
-                  "labelColor": "#ffffff",
-                  "gradientLength": 200
+                color: '#ffffff'
+              },
+              legend: {
+                display: false
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return 'Average Liveness: ' + context.parsed.x.toFixed(4);
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Average Liveness Score',
+                  color: '#ffffff'
+                },
+                beginAtZero: true,
+                max: 0.45,
+                ticks: {
+                  color: '#b3b3b3'
+                },
+                grid: {
+                  color: '#282828'
                 }
               },
-              "value": "#2d2d2d"
-            },
-            "opacity": {
-              "condition": {"param": "select", "value": 1},
-              "value": 0.3
-            },
-            "tooltip": [
-              {"field": "genre_category", "type": "nominal", "title": "Genre Category"},
-              {"field": "liveness", "type": "quantitative", "title": "Average Liveness", "format": ".4f"}
-            ]
-          },
-          "params": [{
-            "name": "select",
-            "select": {"type": "point", "fields": ["genre_category"]}
-          }],
-          "config": {
-            "background": "#121212",
-            "view": {
-              "stroke": "transparent",
-              "fill": "#121212"
-            },
-            "axis": {
-              "grid": true,
-              "gridColor": "#282828"
-            },
-            "legend": {
-              "fillColor": "#121212",
-              "strokeColor": "#282828",
-              "titleColor": "#ffffff",
-              "labelColor": "#ffffff"
+              y: {
+                title: {
+                  display: true,
+                  text: 'Genre Category',
+                  color: '#ffffff'
+                },
+                ticks: {
+                  color: '#b3b3b3'
+                },
+                grid: {
+                  color: '#282828'
+                }
+              }
             }
-          }
-        };
-
-        vegaEmbed('#vis', spec, {
-          actions: false,
-          theme: 'dark',
-          config: {
-            background: '#121212'
           }
         });
       })
       .catch(error => {
         console.error('Error loading data:', error);
-        document.getElementById('vis').innerHTML = '<p style="color: #ffffff;">Error loading dataset.csv</p>';
       });
   </script>
 </body>
