@@ -52,9 +52,9 @@
   <hr>
 
   <h2>Liveness by Genre</h2>
-  <p>Shows how likely tracks were recorded with a live audience. Click to highlight.</p>
+  <p>Distribution of liveness scores showing how likely tracks were recorded with a live audience.</p>
   <div class="viz-container">
-    <div id="liveness-chart"></div>
+    <iframe src="genre_liveness.html" style="height: 650px;"></iframe>
   </div>
 
    <h3>Genre vs. Liveness</h3>
@@ -176,7 +176,6 @@
       });
 
       createPopularityChart(data);
-      createLivenessChart(data);
       createEnergyValenceChart(data);
       createDurationChart(data);
     }).catch(function(error) {
@@ -375,86 +374,6 @@
         .style("text-anchor", "middle")
         .style("font-size", "12px")
         .text("Popularity");
-    }
-
-    function createLivenessChart(data) {
-      const categoryData = {};
-      const categoryCounts = {};
-
-      data.forEach(d => {
-        const genre = d.track_genre;
-        const liveness = d.liveness;
-
-        if (!genre || isNaN(liveness)) return;
-
-        const category = genreToCategory[genre];
-        if (!category) return;
-
-        if (!categoryData[category]) {
-          categoryData[category] = 0;
-          categoryCounts[category] = 0;
-        }
-
-        categoryData[category] += liveness;
-        categoryCounts[category] += 1;
-      });
-
-      const livenessData = [];
-      for (const [category, total] of Object.entries(categoryData)) {
-        livenessData.push({
-          genre_category: category,
-          liveness: total / categoryCounts[category]
-        });
-      }
-
-      livenessData.sort((a, b) => b.liveness - a.liveness);
-
-      const spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "data": {"values": livenessData},
-        "width": 800,
-        "height": 500,
-        "title": "Average Liveness by Genre Category",
-        "mark": "bar",
-        "encoding": {
-          "x": {
-            "field": "liveness",
-            "type": "quantitative",
-            "title": "Average Liveness Score",
-            "scale": {"domain": [0, 0.45]}
-          },
-          "y": {
-            "field": "genre_category",
-            "type": "nominal",
-            "title": "Genre Category",
-            "sort": "-x"
-          },
-          "color": {
-            "condition": {
-              "param": "select",
-              "field": "liveness",
-              "type": "quantitative",
-              "scale": {"scheme": "viridis"},
-              "legend": {"title": "Liveness"}
-            },
-            "value": "lightgray"
-          },
-          "opacity": {
-            "condition": {"param": "select", "value": 1},
-            "value": 0.3
-          },
-          "tooltip": [
-            {"field": "genre_category", "type": "nominal", "title": "Genre Category"},
-            {"field": "liveness", "type": "quantitative", "title": "Average Liveness", "format": ".4f"}
-          ]
-        },
-        "params": [{
-          "name": "select",
-          "select": {"type": "point", "fields": ["genre_category"]}
-        }]
-      };
-
-      vegaEmbed('#liveness-chart', spec);
     }
 
     function createEnergyValenceChart(data) {
