@@ -149,6 +149,16 @@
         const sortedCategories = Object.keys(categoryMedians)
           .sort((a, b) => categoryMedians[b] - categoryMedians[a]);
 
+        // Add color index to data
+        const categoryToColorIndex = {};
+        sortedCategories.forEach((cat, i) => {
+          categoryToColorIndex[cat] = i;
+        });
+
+        data.forEach(d => {
+          d.colorIndex = categoryToColorIndex[d.genre_category];
+        });
+
         // Create Vega-Lite specification
         const spec = {
           "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -195,12 +205,11 @@
               }
             },
             "color": {
-              "field": "genre_category",
-              "type": "nominal",
+              "field": "colorIndex",
+              "type": "quantitative",
               "scale": {
-                "domain": sortedCategories,
-                "range": ["#008000", "#355E3B", "#00A36C", "#2AAA8A", "#32CD32", "#4CBB17", "#90EE90", 
-                         "#008000", "#355E3B", "#00A36C", "#2AAA8A", "#32CD32", "#4CBB17", "#90EE90"]
+                "domain": [0, sortedCategories.length - 1],
+                "range": ["#008000", "#355E3B", "#00A36C", "#2AAA8A", "#32CD32", "#4CBB17", "#90EE90"]
               },
               "legend": null
             },
