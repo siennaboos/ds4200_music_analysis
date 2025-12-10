@@ -238,9 +238,7 @@
         .range([0, height])
         .padding(0.2);
 
-      const colorScale = d3.scaleLinear()
-        .domain([d3.min(popularityData, d => d.popularity), d3.max(popularityData, d => d.popularity)])
-        .range(['#90EE90', '#008000']);
+      // Color scale removed - using solid green color instead
 
       svg.append("g")
         .attr("transform", `translate(0,${height})`)
@@ -286,7 +284,7 @@
         .attr("y", d => y(d.genre_category))
         .attr("width", d => x(d.popularity))
         .attr("height", y.bandwidth())
-        .attr("fill", d => colorScale(d.popularity))
+        .attr("fill", "#1DB954")
         .attr("opacity", 1)
         .on("mouseover", function(event, d) {
           if (!selectedBar || selectedBar === this) {
