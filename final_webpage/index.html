@@ -444,9 +444,9 @@
       titleGroup.insert('rect', 'text').attr('x', bbox.x - 10).attr('y', bbox.y - 5).attr('width', bbox.width + 20).attr('height', bbox.height + 10).attr('fill', '#181818').attr('rx', 5).attr('opacity', 0.95);
 
       // Data points - clean (non-explicit) in light green, explicit in hunter green
-      svg.append('g').selectAll("circle").data(cleanData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#90EE90").style("opacity", 0.5).style("stroke", "white").style("stroke-width", 0.4);
+      svg.append('g').selectAll("circle").data(cleanData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#90EE90").style("opacity", 0.3).style("stroke", "white").style("stroke-width", 0.5);
 
-      svg.append('g').selectAll("circle").data(explicitData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#355E3B").style("opacity", 0.5).style("stroke", "white").style("stroke-width", 0.4);
+      svg.append('g').selectAll("circle").data(explicitData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#355E3B").style("opacity", 0.5).style("stroke", "white").style("stroke-width", 0.5);
 
       // Explicitness Legend
       const explicitLegend = svg.append('g').attr('transform', `translate(${margin.left + 10}, ${margin.top + 10})`);
