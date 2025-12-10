@@ -81,10 +81,14 @@
           "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
           "background": "#121212",
           "data": {"values": elvisData},
+          "params": [{
+            "name": "brush",
+            "select": {"type": "interval", "encodings": ["x", "y"]}
+          }],
           "vconcat": [
             {
               "title": {
-                "text": "Elvis Presley Songs: Valence vs. Acousticness (Click to Reveal Song)",
+                "text": "Elvis Presley Songs: Valence vs. Acousticness (Click and Drag to Select Songs)",
                 "color": "#ffffff",
                 "fontSize": 16,
                 "font": "Circular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif"
@@ -122,20 +126,26 @@
                       }
                     },
                     "color": {
-                      "condition": {
-                        "param": "click",
-                        "value": "#90EE90"
-                      },
-                      "field": "tempo",
-                      "type": "quantitative",
-                      "scale": {
-                        "range": ["#064635", "#1B7357", "#2A9D6C", "#4CBB17", "#90EE90"]
-                      },
-                      "legend": {
-                        "title": "Tempo",
-                        "titleColor": "#ffffff",
-                        "labelColor": "#ffffff"
-                      }
+                      "condition": [
+                        {
+                          "param": "click",
+                          "value": "#90EE90"
+                        },
+                        {
+                          "param": "brush",
+                          "field": "tempo",
+                          "type": "quantitative",
+                          "scale": {
+                            "range": ["#064635", "#1B7357", "#2A9D6C", "#4CBB17", "#90EE90"]
+                          },
+                          "legend": {
+                            "title": "Tempo",
+                            "titleColor": "#ffffff",
+                            "labelColor": "#ffffff"
+                          }
+                        }
+                      ],
+                      "value": "#666666"
                     },
                     "tooltip": [
                       {"field": "track_name", "type": "nominal", "title": "Track Name"},
@@ -176,7 +186,7 @@
               },
               "width": 600,
               "height": 300,
-              "mark": {"type": "bar", "opacity": 0.8, "color": "#2A9D6C"},
+              "mark": {"type": "bar", "opacity": 0.8},
               "encoding": {
                 "x": {
                   "field": "tempo",
@@ -199,12 +209,19 @@
                     "gridColor": "#282828",
                     "domainColor": "#282828"
                   }
+                },
+                "color": {
+                  "condition": {
+                    "param": "brush",
+                    "value": "#2A9D6C"
+                  },
+                  "value": "#666666"
                 }
               }
             },
             {
               "title": {
-                "text": "Loudness vs Duration (Click a Song)",
+                "text": "Loudness vs Duration",
                 "color": "#ffffff",
                 "fontSize": 16,
                 "font": "Circular, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif"
@@ -217,7 +234,7 @@
                     "name": "click2",
                     "select": {"type": "point", "on": "click", "fields": ["track_name", "duration_min", "loudness"]}
                   }],
-                  "mark": {"type": "circle", "size": 90, "opacity": 0.7, "color": "#4CBB17"},
+                  "mark": {"type": "circle", "size": 90, "opacity": 0.7},
                   "encoding": {
                     "x": {
                       "field": "duration_min",
@@ -240,6 +257,19 @@
                         "gridColor": "#282828",
                         "domainColor": "#282828"
                       }
+                    },
+                    "color": {
+                      "condition": [
+                        {
+                          "param": "click2",
+                          "value": "#90EE90"
+                        },
+                        {
+                          "param": "brush",
+                          "value": "#4CBB17"
+                        }
+                      ],
+                      "value": "#666666"
                     },
                     "tooltip": [
                       {"field": "track_name", "type": "nominal", "title": "Track Name"},
