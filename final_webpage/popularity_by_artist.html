@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Popularity by Artists (Top 20), Split by Explicit Hue</title>
+    <title>Popularity by Artists (Top 20), Split by Explicit Content</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         body {
@@ -23,6 +23,35 @@
             max-width: 1200px;
             width: 100%;
         }
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .controls label {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .controls select {
+            background-color: #282828;
+            color: #ffffff;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .controls select:hover {
+            border-color: #1DB954;
+        }
+        .controls select:focus {
+            border-color: #1DB954;
+        }
         canvas {
             max-width: 100%;
         }
@@ -30,38 +59,193 @@
 </head>
 <body>
     <div class="container">
+        <div class="controls">
+            <label for="sortSelect">Sort by:</label>
+            <select id="sortSelect">
+                <option value="total-desc">Total Popularity (High to Low)</option>
+                <option value="total-asc">Total Popularity (Low to High)</option>
+                <option value="explicit-desc">Explicit Content (High to Low)</option>
+                <option value="explicit-asc">Explicit Content (Low to High)</option>
+                <option value="non-explicit-desc">Non-Explicit Content (High to Low)</option>
+                <option value="non-explicit-asc">Non-Explicit Content (Low to High)</option>
+                <option value="explicit-ratio-desc">Explicit Ratio (High to Low)</option>
+                <option value="explicit-ratio-asc">Explicit Ratio (Low to High)</option>
+                <option value="alpha-asc">Alphabetical (A to Z)</option>
+                <option value="alpha-desc">Alphabetical (Z to A)</option>
+                <option value="original">Original Order</option>
+            </select>
+        </div>
         <canvas id="popularityChart"></canvas>
     </div>
 
     <script>
         const ctx = document.getElementById('popularityChart').getContext('2d');
         
-        const artists = [
-            'Pepper', 'Yung Nut', 'Tank', 'Herald', 'Berry', 'Beatles', 
-            'Airport', 'Coder', 'Leaf', 'Borders', 'Myers', 'Lisrom', 
-            'Kantees', 'Jones', 'BTS', 'Faid', 'Blue', 'Dablys', 'Raslers', 'Adams'
-        ];
+        // Original data from pandas DataFrame
+        const artistsOriginal = ['Arctic Monkeys', 'BTS', 'Bryan Adams', 'Charlie Brown Jr.', 'Chuck Berry', 'Daddy Yankee', 'Ella Fitzgerald', 'Elvis Presley', 'Feid', 'George Jones', 'Håkan Hellström', 'Linkin Park', 'OneRepublic', 'Prateek Kuhad', 'Red Hot Chili Peppers', 'Scooter', 'Stevie Wonder', 'The Beach Boys', 'The Beatles', 'my little airport'];
+        const explicitFalseOriginal = [55, 69, 11, 42, 8, 13, 1, 55, 10, 17, 31, 56, 31, 46, 42, 24, 1, 7, 61, 33];
+        const explicitTrueOriginal = [60, 0, 0, 0, 0, 71, 0, 0, 12, 0, 32, 50, 20, 0, 36, 24, 0, 0, 0, 30];
 
-        const explicitFalse = [42, 43, 57, 0, 8, 61, 33, 25, 46, 0, 55, 0, 13, 17, 69, 10, 31, 7, 55, 11];
-        const explicitTrue = [37, 0, 50, 0, 0, 0, 30, 25, 0, 0, 60, 32, 71, 0, 0, 12, 20, 0, 0, 0];
+        // Create initial combined data with original indices
+        const originalData = artistsOriginal.map((artist, i) => ({
+            artist: artist,
+            explicitFalse: explicitFalseOriginal[i],
+            explicitTrue: explicitTrueOriginal[i],
+            total: explicitFalseOriginal[i] + explicitTrueOriginal[i],
+            explicitRatio: explicitTrueOriginal[i] / (explicitFalseOriginal[i] + explicitTrueOriginal[i]) || 0,
+            originalIndex: i
+        }));
 
-        new Chart(ctx, {
+        // Generate colors based on popularity gradient (green color scheme)
+        function getColorForValue(value, maxValue) {
+            const ratio = value / maxValue;
+            
+            // Light Green #90EE90 (144, 238, 144) to Hunter Green #355E3B (53, 94, 59)
+            if (ratio < 0.25) {
+                const t = ratio / 0.25;
+                const r = Math.round(144 + (53 - 144) * t);
+                const g = Math.round(238 + (94 - 238) * t);
+                const b = Math.round(144 + (59 - 144) * t);
+                return `rgb(${r}, ${g}, ${b})`;
+            } 
+            // Hunter Green #355E3B to Jade #00A36C (0, 163, 108)
+            else if (ratio < 0.5) {
+                const t = (ratio - 0.25) / 0.25;
+                const r = Math.round(53 + (0 - 53) * t);
+                const g = Math.round(94 + (163 - 94) * t);
+                const b = Math.round(59 + (108 - 59) * t);
+                return `rgb(${r}, ${g}, ${b})`;
+            } 
+            // Jade #00A36C to Jungle Green #2AAA8A (42, 170, 138)
+            else if (ratio < 0.75) {
+                const t = (ratio - 0.5) / 0.25;
+                const r = Math.round(0 + (42 - 0) * t);
+                const g = Math.round(163 + (170 - 163) * t);
+                const b = Math.round(108 + (138 - 108) * t);
+                return `rgb(${r}, ${g}, ${b})`;
+            } 
+            // Jungle Green #2AAA8A to Kelly Green #4CBB17 (76, 187, 23)
+            else {
+                const t = (ratio - 0.75) / 0.25;
+                const r = Math.round(42 + (76 - 42) * t);
+                const g = Math.round(170 + (187 - 170) * t);
+                const b = Math.round(138 + (23 - 138) * t);
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+        }
+
+        function darkenColor(color) {
+            const match = color.match(/rgb\((\d+), (\d+), (\d+)\)/);
+            if (match) {
+                const r = Math.max(0, parseInt(match[1]) - 30);
+                const g = Math.max(0, parseInt(match[2]) - 30);
+                const b = Math.max(0, parseInt(match[3]) - 30);
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+            return color;
+        }
+
+        function sortData(sortType) {
+            let sorted = [...originalData];
+            
+            switch(sortType) {
+                case 'total-desc':
+                    sorted.sort((a, b) => b.total - a.total);
+                    break;
+                case 'total-asc':
+                    sorted.sort((a, b) => a.total - b.total);
+                    break;
+                case 'explicit-desc':
+                    sorted.sort((a, b) => b.explicitTrue - a.explicitTrue);
+                    break;
+                case 'explicit-asc':
+                    sorted.sort((a, b) => a.explicitTrue - b.explicitTrue);
+                    break;
+                case 'non-explicit-desc':
+                    sorted.sort((a, b) => b.explicitFalse - a.explicitFalse);
+                    break;
+                case 'non-explicit-asc':
+                    sorted.sort((a, b) => a.explicitFalse - b.explicitFalse);
+                    break;
+                case 'explicit-ratio-desc':
+                    sorted.sort((a, b) => b.explicitRatio - a.explicitRatio);
+                    break;
+                case 'explicit-ratio-asc':
+                    sorted.sort((a, b) => a.explicitRatio - b.explicitRatio);
+                    break;
+                case 'alpha-asc':
+                    sorted.sort((a, b) => a.artist.localeCompare(b.artist));
+                    break;
+                case 'alpha-desc':
+                    sorted.sort((a, b) => b.artist.localeCompare(a.artist));
+                    break;
+                case 'original':
+                    sorted.sort((a, b) => a.originalIndex - b.originalIndex);
+                    break;
+            }
+            
+            return sorted;
+        }
+
+        function updateChart(sortType) {
+            const sorted = sortData(sortType);
+            
+            const artists = sorted.map(d => d.artist);
+            const explicitFalse = sorted.map(d => d.explicitFalse);
+            const explicitTrue = sorted.map(d => d.explicitTrue);
+            const totals = sorted.map(d => d.total);
+            
+            const maxTotal = Math.max(...totals);
+            const barColors = totals.map(total => getColorForValue(total, maxTotal));
+            const explicitFalseColors = barColors;
+            const explicitTrueColors = barColors.map(color => darkenColor(color));
+            
+            myChart.data.labels = artists;
+            myChart.data.datasets[0].data = explicitFalse;
+            myChart.data.datasets[0].backgroundColor = explicitFalseColors;
+            myChart.data.datasets[0].borderColor = explicitFalseColors;
+            myChart.data.datasets[1].data = explicitTrue;
+            myChart.data.datasets[1].backgroundColor = explicitTrueColors;
+            myChart.data.datasets[1].borderColor = explicitTrueColors;
+            
+            // Store totals for tooltip
+            myChart.options.plugins.tooltip.callbacks.footer = function(tooltipItems) {
+                const index = tooltipItems[0].dataIndex;
+                return 'Total: ' + totals[index];
+            };
+            
+            myChart.update();
+        }
+
+        // Initial sort
+        let initialSorted = sortData('total-desc');
+        let artists = initialSorted.map(d => d.artist);
+        let explicitFalse = initialSorted.map(d => d.explicitFalse);
+        let explicitTrue = initialSorted.map(d => d.explicitTrue);
+        let totals = initialSorted.map(d => d.total);
+
+        const maxTotal = Math.max(...totals);
+        const barColors = totals.map(total => getColorForValue(total, maxTotal));
+        const explicitFalseColors = barColors;
+        const explicitTrueColors = barColors.map(color => darkenColor(color));
+
+        const myChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: artists,
                 datasets: [
                     {
-                        label: 'False',
+                        label: 'Non-Explicit',
                         data: explicitFalse,
-                        backgroundColor: '#90EE90',
-                        borderColor: '#90EE90',
+                        backgroundColor: explicitFalseColors,
+                        borderColor: explicitFalseColors,
                         borderWidth: 1
                     },
                     {
-                        label: 'True',
+                        label: 'Explicit',
                         data: explicitTrue,
-                        backgroundColor: '#008000',
-                        borderColor: '#008000',
+                        backgroundColor: explicitTrueColors,
+                        borderColor: explicitTrueColors,
                         borderWidth: 1
                     }
                 ]
@@ -77,7 +261,10 @@
                             size: 18,
                             weight: '700'
                         },
-                        color: '#ffffff'
+                        color: '#ffffff',
+                        padding: {
+                            bottom: 20
+                        }
                     },
                     legend: {
                         display: true,
@@ -85,18 +272,45 @@
                         align: 'end',
                         title: {
                             display: true,
-                            text: 'explicit',
+                            text: 'Content Type',
                             color: '#ffffff'
                         },
                         labels: {
-                            color: '#ffffff'
+                            color: '#ffffff',
+                            generateLabels: function(chart) {
+                                return [
+                                    {
+                                        text: 'Non-Explicit',
+                                        fillStyle: '#4CBB17',
+                                        strokeStyle: '#4CBB17',
+                                        lineWidth: 1
+                                    },
+                                    {
+                                        text: 'Explicit',
+                                        fillStyle: '#2AAA8A',
+                                        strokeStyle: '#2AAA8A',
+                                        lineWidth: 1
+                                    }
+                                ];
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            footer: function(tooltipItems) {
+                                const index = tooltipItems[0].dataIndex;
+                                return 'Total: ' + totals[index];
+                            }
                         }
                     }
                 },
                 scales: {
                     x: {
+                        stacked: true,
                         title: {
-                            display: false
+                            display: true,
+                            text: 'Artist',
+                            color: '#ffffff'
                         },
                         ticks: {
                             maxRotation: 90,
@@ -108,13 +322,13 @@
                         }
                     },
                     y: {
+                        stacked: true,
                         title: {
                             display: true,
-                            text: 'popularity',
+                            text: 'Popularity Score',
                             color: '#ffffff'
                         },
                         beginAtZero: true,
-                        max: 75,
                         ticks: {
                             color: '#b3b3b3'
                         },
@@ -124,6 +338,11 @@
                     }
                 }
             }
+        });
+
+        // Add event listener for sort selection
+        document.getElementById('sortSelect').addEventListener('change', function(e) {
+            updateChart(e.target.value);
         });
     </script>
 </body>
