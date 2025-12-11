@@ -62,6 +62,7 @@ body > p:first-of-type {
   background: #181818;
   border-radius: 8px;
   border: 1px solid #282828;
+  flex-wrap: wrap;
 }
 
 select {
