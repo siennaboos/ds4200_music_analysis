@@ -479,8 +479,8 @@
       const cleanData = filteredData.filter(d => !d.explicit);
       const explicitData = filteredData.filter(d => d.explicit);
 
-      const width = 900;
-      const height = 600;
+      const width = 800;
+      const height = 500;
       const margin = { top: 60, bottom: 60, left: 60, right: 60 };
 
       const svg = d3.select('#chart').append('svg').attr('width', width).attr('height', height);
@@ -512,10 +512,10 @@
       const bbox = textElement.node().getBBox();
       titleGroup.insert('rect', 'text').attr('x', bbox.x - 10).attr('y', bbox.y - 5).attr('width', bbox.width + 20).attr('height', bbox.height + 10).attr('fill', '#181818').attr('rx', 5).attr('opacity', 0.95);
 
-      // Data points - clean (non-explicit) in light green, explicit in hunter green
-      svg.append('g').selectAll("circle").data(cleanData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#90EE90").style("opacity", 0.3).style("stroke", "white").style("stroke-width", 0.5);
+      // Data points - clean (non-explicit) in light green, explicit in jade green (Elvis chart colors)
+      svg.append('g').selectAll("circle").data(cleanData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#90EE90").style("opacity", 0.6).style("stroke", "white").style("stroke-width", 0.5);
 
-      svg.append('g').selectAll("circle").data(explicitData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#355E3B").style("opacity", 0.5).style("stroke", "white").style("stroke-width", 0.5);
+      svg.append('g').selectAll("circle").data(explicitData).enter().append("circle").attr("cx", d => xScale(d.energy)).attr("cy", d => yScale(d.valence)).attr("r", d => 3 + (d.acousticness * 8)).style("fill", "#2A9D6C").style("opacity", 0.7).style("stroke", "white").style("stroke-width", 0.5);
 
       // Explicitness Legend
       const explicitLegend = svg.append('g').attr('transform', `translate(${margin.left + 10}, ${margin.top + 10})`);
@@ -523,7 +523,7 @@
       explicitLegend.append('text').attr('x', 10).attr('y', 20).text('Explicitness').style('font-weight', 'bold').style('font-size', '12px').style('fill', '#ffffff');
       explicitLegend.append('circle').attr('cx', 20).attr('cy', 38).attr('r', 6).style('fill', '#90EE90').style('opacity', 0.7).style('stroke', 'white');
       explicitLegend.append('text').attr('x', 32).attr('y', 42).text('Non-Explicit').style('font-size', '11px').style('fill', '#cccccc');
-      explicitLegend.append('circle').attr('cx', 20).attr('cy', 58).attr('r', 6).style('fill', '#355E3B').style('opacity', 0.7).style('stroke', 'white');
+      explicitLegend.append('circle').attr('cx', 20).attr('cy', 58).attr('r', 6).style('fill', '#2A9D6C').style('opacity', 0.7).style('stroke', 'white');
       explicitLegend.append('text').attr('x', 32).attr('y', 62).text('Explicit').style('font-size', '11px').style('fill', '#cccccc');
 
       // Acousticness Legend
@@ -540,7 +540,7 @@
       acousticSizes.forEach((item, i) => {
         const yPos = 38 + i * 25;
         const radius = 3 + (item.value * 8);
-        acousticLegend.append('circle').attr('cx', 20).attr('cy', yPos).attr('r', radius).style('fill', '#355E3B').style('opacity', 0.7).style('stroke', 'white');
+        acousticLegend.append('circle').attr('cx', 20).attr('cy', yPos).attr('r', radius).style('fill', '#2A9D6C').style('opacity', 0.7).style('stroke', 'white');
         acousticLegend.append('text').attr('x', 40).attr('y', yPos + 4).text(item.label).style('font-size', '11px').style('fill', '#cccccc');
       });
     }
