@@ -67,6 +67,30 @@
 <div id="controls">
   <label for="genreSelect">Genre:</label>
   <select id="genreSelect"></select>
+  
+  <label for="energyFilter">Energy Range:</label>
+  <select id="energyFilter">
+    <option value="all">All</option>
+    <option value="low">Low (0-0.33)</option>
+    <option value="medium">Medium (0.33-0.67)</option>
+    <option value="high">High (0.67-1.0)</option>
+  </select>
+  
+  <label for="valenceFilter">Valence Range:</label>
+  <select id="valenceFilter">
+    <option value="all">All</option>
+    <option value="low">Low (0-0.33)</option>
+    <option value="medium">Medium (0.33-0.67)</option>
+    <option value="high">High (0.67-1.0)</option>
+  </select>
+  
+  <label for="popularityFilter">Popularity Range:</label>
+  <select id="popularityFilter">
+    <option value="all">All</option>
+    <option value="low">Low (0-33)</option>
+    <option value="medium">Medium (33-67)</option>
+    <option value="high">High (67-100)</option>
+  </select>
 </div>
 <div class="viz-container">
   <div id="chart"></div>
@@ -383,6 +407,9 @@
 
   function createEnergyValenceChart(data) {
     const select = document.getElementById('genreSelect');
+    const energyFilter = document.getElementById('energyFilter');
+    const valenceFilter = document.getElementById('valenceFilter');
+    const popularityFilter = document.getElementById('popularityFilter');
 
     Object.keys(genre_dict).forEach(genre => {
       const option = document.createElement('option');
@@ -393,20 +420,59 @@
 
     select.value = 'Hip-Hop & Urban';
 
-    updateChart('Hip-Hop & Urban');
+    updateChart('Hip-Hop & Urban', 'all', 'all', 'all');
 
     select.addEventListener('change', function() {
-      updateChart(this.value);
+      updateChart(this.value, energyFilter.value, valenceFilter.value, popularityFilter.value);
+    });
+    
+    energyFilter.addEventListener('change', function() {
+      updateChart(select.value, this.value, valenceFilter.value, popularityFilter.value);
+    });
+    
+    valenceFilter.addEventListener('change', function() {
+      updateChart(select.value, energyFilter.value, this.value, popularityFilter.value);
+    });
+    
+    popularityFilter.addEventListener('change', function() {
+      updateChart(select.value, energyFilter.value, valenceFilter.value, this.value);
     });
 
-    function updateChart(selectedGenre) {
+    function updateChart(selectedGenre, energyRange, valenceRange, popularityRange) {
       d3.select('#chart').selectAll('*').remove();
 
       const genreList = genre_dict[selectedGenre];
-      const filteredData = data.filter(d => genreList.includes(d.track_genre));
+      let filteredData = data.filter(d => genreList.includes(d.track_genre));
+      
+      // Apply energy filter
+      if (energyRange === 'low') {
+        filteredData = filteredData.filter(d => d.energy >= 0 && d.energy < 0.33);
+      } else if (energyRange === 'medium') {
+        filteredData = filteredData.filter(d => d.energy >= 0.33 && d.energy < 0.67);
+      } else if (energyRange === 'high') {
+        filteredData = filteredData.filter(d => d.energy >= 0.67 && d.energy <= 1.0);
+      }
+      
+      // Apply valence filter
+      if (valenceRange === 'low') {
+        filteredData = filteredData.filter(d => d.valence >= 0 && d.valence < 0.33);
+      } else if (valenceRange === 'medium') {
+        filteredData = filteredData.filter(d => d.valence >= 0.33 && d.valence < 0.67);
+      } else if (valenceRange === 'high') {
+        filteredData = filteredData.filter(d => d.valence >= 0.67 && d.valence <= 1.0);
+      }
+      
+      // Apply popularity filter
+      if (popularityRange === 'low') {
+        filteredData = filteredData.filter(d => d.popularity >= 0 && d.popularity < 33);
+      } else if (popularityRange === 'medium') {
+        filteredData = filteredData.filter(d => d.popularity >= 33 && d.popularity < 67);
+      } else if (popularityRange === 'high') {
+        filteredData = filteredData.filter(d => d.popularity >= 67 && d.popularity <= 100);
+      }
 
       if (filteredData.length === 0) {
-        d3.select('#chart').append('p').text('No data available for this genre category');
+        d3.select('#chart').append('p').text('No data available for this combination of filters').style('color', '#ffffff');
         return;
       }
 
@@ -502,7 +568,8 @@
       d3.select('#chart2').selectAll('*').remove();
 
       const genreList = genre_dict[selectedGenre];
-      const filteredData = data.filter(d => genreList.includes(d.track_genre)); // Fixed: changed allData to data
+      // Filter by genre and remove songs over 10 minutes (600 seconds / 60 = 10 minutes)
+      const filteredData = data.filter(d => genreList.includes(d.track_genre) && d.duration <= 10);
 
       if (filteredData.length === 0) {
         d3.select('#chart2').append('p').text('No data available for this genre category').style('color', '#ffffff');

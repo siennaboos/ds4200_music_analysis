@@ -96,54 +96,9 @@
             originalIndex: i
         }));
 
-        // Generate colors based on popularity gradient (green color scheme)
-        function getColorForValue(value, maxValue) {
-            const ratio = value / maxValue;
-            
-            // Light Green #90EE90 (144, 238, 144) to Hunter Green #355E3B (53, 94, 59)
-            if (ratio < 0.25) {
-                const t = ratio / 0.25;
-                const r = Math.round(144 + (53 - 144) * t);
-                const g = Math.round(238 + (94 - 238) * t);
-                const b = Math.round(144 + (59 - 144) * t);
-                return `rgb(${r}, ${g}, ${b})`;
-            } 
-            // Hunter Green #355E3B to Jade #00A36C (0, 163, 108)
-            else if (ratio < 0.5) {
-                const t = (ratio - 0.25) / 0.25;
-                const r = Math.round(53 + (0 - 53) * t);
-                const g = Math.round(94 + (163 - 94) * t);
-                const b = Math.round(59 + (108 - 59) * t);
-                return `rgb(${r}, ${g}, ${b})`;
-            } 
-            // Jade #00A36C to Jungle Green #2AAA8A (42, 170, 138)
-            else if (ratio < 0.75) {
-                const t = (ratio - 0.5) / 0.25;
-                const r = Math.round(0 + (42 - 0) * t);
-                const g = Math.round(163 + (170 - 163) * t);
-                const b = Math.round(108 + (138 - 108) * t);
-                return `rgb(${r}, ${g}, ${b})`;
-            } 
-            // Jungle Green #2AAA8A to Kelly Green #4CBB17 (76, 187, 23)
-            else {
-                const t = (ratio - 0.75) / 0.25;
-                const r = Math.round(42 + (76 - 42) * t);
-                const g = Math.round(170 + (187 - 170) * t);
-                const b = Math.round(138 + (23 - 138) * t);
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-        }
-
-        function darkenColor(color) {
-            const match = color.match(/rgb\((\d+), (\d+), (\d+)\)/);
-            if (match) {
-                const r = Math.max(0, parseInt(match[1]) - 30);
-                const g = Math.max(0, parseInt(match[2]) - 30);
-                const b = Math.max(0, parseInt(match[3]) - 30);
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-            return color;
-        }
+        // Two consistent green colors for explicit vs non-explicit
+        const NON_EXPLICIT_COLOR = '#4CBB17'; // Kelly Green for non-explicit
+        const EXPLICIT_COLOR = '#2AAA8A'; // Jungle Green for explicit (darker shade)
 
         function sortData(sortType) {
             let sorted = [...originalData];
@@ -195,10 +150,9 @@
             const explicitTrue = sorted.map(d => d.explicitTrue);
             const totals = sorted.map(d => d.total);
             
-            const maxTotal = Math.max(...totals);
-            const barColors = totals.map(total => getColorForValue(total, maxTotal));
-            const explicitFalseColors = barColors;
-            const explicitTrueColors = barColors.map(color => darkenColor(color));
+            // Use consistent colors for all bars
+            const explicitFalseColors = new Array(artists.length).fill(NON_EXPLICIT_COLOR);
+            const explicitTrueColors = new Array(artists.length).fill(EXPLICIT_COLOR);
             
             myChart.data.labels = artists;
             myChart.data.datasets[0].data = explicitFalse;
@@ -224,10 +178,9 @@
         let explicitTrue = initialSorted.map(d => d.explicitTrue);
         let totals = initialSorted.map(d => d.total);
 
-        const maxTotal = Math.max(...totals);
-        const barColors = totals.map(total => getColorForValue(total, maxTotal));
-        const explicitFalseColors = barColors;
-        const explicitTrueColors = barColors.map(color => darkenColor(color));
+        // Use consistent colors for all bars
+        const explicitFalseColors = new Array(artists.length).fill(NON_EXPLICIT_COLOR);
+        const explicitTrueColors = new Array(artists.length).fill(EXPLICIT_COLOR);
 
         const myChart = new Chart(ctx, {
             type: 'bar',
@@ -281,14 +234,14 @@
                                 return [
                                     {
                                         text: 'Non-Explicit',
-                                        fillStyle: '#4CBB17',
-                                        strokeStyle: '#4CBB17',
+                                        fillStyle: NON_EXPLICIT_COLOR,
+                                        strokeStyle: NON_EXPLICIT_COLOR,
                                         lineWidth: 1
                                     },
                                     {
                                         text: 'Explicit',
-                                        fillStyle: '#2AAA8A',
-                                        strokeStyle: '#2AAA8A',
+                                        fillStyle: EXPLICIT_COLOR,
+                                        strokeStyle: EXPLICIT_COLOR,
                                         lineWidth: 1
                                     }
                                 ];
